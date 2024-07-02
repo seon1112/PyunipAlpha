@@ -1,0 +1,317 @@
+@charset "UTF-8";
+.login_header{
+  box-shadow: none;
+ /* background-color: #D7D7D9;*/
+  background-color: var(--White);
+}
+.info_wrap{
+  width: 100%;
+  height: 100%;
+}
+
+.info_form{
+  margin:50px auto 40px auto;
+}
+
+.info_title_box{
+  width: 100%;
+  text-align: center;
+  font-size: 23px;
+  font-weight: 600;
+  color:#363A3D;
+  line-height: 36px;
+}
+.login_content{
+/*   background-color: #ffffff; */
+  background-color:var(--Gray-5);
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.login_form{
+  width: 500px;
+/*   border-radius: 8px; */
+  background-color: var(--White);
+  margin-top:100px;
+  border:1px solid var(--Gray-20);
+}
+.login_form > ul
+{
+/*   border-top-left-radius: 8px; */
+/*   border-top-right-radius: 8px;   */
+  padding: 0;
+  margin:0;
+  font-size: 0;
+  width: 100%;
+}
+.login_form > ul > li
+{
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: var(--Gray-5);
+  width: calc( 100% / 2 );
+  padding: 18px 0px;
+  cursor: pointer;
+  text-align: center;
+}
+.login_form > ul > li.tab_selected{
+  background-color: var(--White);
+  color: var(--Main-30);
+}
+
+.login_wrap{
+  width: 100%;
+}
+
+.login_box{
+  padding: 35px 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.login_box2{
+  padding: 35px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;	
+}
+
+.login_info{
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login_info.show{
+	display: flex;
+}
+
+.login_info.noshow{
+	display: none;
+}
+
+.login_box2.update_box{
+  width: 500px;
+/*   border-radius: 8px; */
+  background-color: var(--White);
+  margin-top:100px;
+  border:1px solid #D1D1D1;	
+  height: fit-content;
+}
+
+.pwd_info_form{
+  display: flex;
+  justify-content: space-between;
+}
+.info_title{
+  font-size: 15px;
+  font-weight: 500;
+}
+.email_input{
+  background-image: url('../image/icon/user_icon.png');
+}
+.pwd_input{
+  background-image: url('../image/icon/pwd_icon.png');
+}
+
+.email_input
+,.pwd_input
+,.num_input
+{
+  border: 1px solid var(--Gray-20);
+  background-color: var(--Gray-5);
+  border-radius: 4px;
+  padding: 15px 13px 15px 42px;
+  background-position: 14px center;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  position: relative;
+  font-family: 'Pretendard';
+}
+
+.email_input:not(:read-only):hover
+,.email_input:not(:read-only):focus
+,.pwd_input:not(:read-only):hover
+,.pwd_input:not(:read-only):focus
+,.num_input:not(:read-only):hover
+,.num_input:not(:read-only):focus{
+  border: 1px solid #D98E04;
+  background-color: var(--White);
+}
+
+.email_input:read-only
+,.pwd_input:read-only
+{
+  background-color: var(--Gray-20);
+}
+
+.info_wrap .info_form .email_input
+,.info_wrap .info_form .pwd_input
+{
+  background-position: 2% center;
+}
+
+.num_input{
+  padding: 15px 13px 15px 13px;
+}
+.pwd_input{
+  padding-right: 42px;
+}
+.eye_icon{
+  position: absolute;
+  right: 15px;
+  top: 40px;
+}
+.eye_off
+,.eye_on
+{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: none;
+}
+.eye_icon > .eye_selected{
+  display: block;
+}
+.update_pwd{
+  color: var(--Main-60);
+  font-size: 14px;
+}
+
+.login_mid_line{
+  height: 1px;
+  width: 100%;
+  background-color: var(--Gray-20);	
+}
+
+.socail_box{
+  display: flex;
+  gap: 30px;
+}
+
+.socail_item{
+/*   border: 1px solid #E1E4E8; */
+/*   background-color: #F3F5F7; */
+  border-radius: 4px;
+  width: 60px;
+  height: 60px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;    
+  cursor: pointer;
+}
+
+.socail_form{
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.middle_line{
+  width: calc(100% - 80px);
+  height: 1px;
+  background-color: var(--Gray-20);	
+}
+
+.sign_box{
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  gap: 10px;
+}
+
+.sign_box.notemplate{
+  grid-template-columns: 1fr;
+}
+
+.email_confirm
+,.pwd_confirm
+,.pwd_double_confirm
+,.nickname_confirm
+,.hint_confirm
+{
+  display: none;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 0px;
+}
+
+.hint_description{
+  display:block;
+  color: darkgray;	
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 0px;
+}
+.confirm{
+  display:block;
+  color: darkgray;
+}
+.noconfirm{
+  display: block;
+  color: rgb(255, 0, 0);
+}
+.hint_confirm.confirm::after{
+  content: '인증 되었습니다.';
+}
+.hint_confirm.noconfirm::after{
+  content: '인증에 실패하였습니다.';
+}
+.pwd_confirm.confirm::after{
+  content: '올바른 비밀번호입니다.';
+}
+.pwd_confirm.noconfirm::after{
+  content: '비밀번호 규칙을 준수해주세요.';
+}
+.pwd_double_confirm.noconfirm::after{
+  content: '비밀번호가 일치하지 않습니다.';
+}
+.pwd_double_confirm.confirm::after{
+  content: '올바르게 입력되었습니다.';
+}
+.nickname_confirm.confirm::after{
+  content: '사용 가능한 닉네임 입니다.';
+}
+.nickname_confirm.noconfirm::after{
+  content: '사용 불가능한 닉네임 입니다.';
+}
+.email_confirm.confirm::after{
+  content: '이메일이 인증되었습니다.';
+}
+.email_confirm.noconfirm::after{
+  content: '이메일 인증에 실패하였습니다.';
+}
+.socail_item#naver{
+  background-image: url('../image/icon/naver_btn.png');
+}
+.socail_item#google{
+  background-image: url('../image/icon/google_btn.png');
+}
+.socail_item#kakao{
+  background-image: url('../image/icon/kakao_btn.png');
+}
+
+.login_notice{
+ color:var(--Gray-50); 
+ font-size: 14px; 
+ margin-top:8px;	
+}
+
+@media screen and (max-width: 1180px){
+	
+	.login_box{
+	  padding: 20px 15px;
+	  gap: 20px;
+	}
+	
+	.sign_box{
+	  grid-template-columns: 1fr 60px;
+	  gap: 6px;
+	}
+	
+}

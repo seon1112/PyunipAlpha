@@ -1,0 +1,43 @@
+@charset "utf-8";
+
+:root {
+  --White: #FFFFFF;
+  --Gray-5:  #F8F9FA	;         
+  --Gray-10: #F0F1F4;         
+  --Gray-20: #E1E4E8;        
+  --Gray-30: #CCCFD7;          
+  --Gray-40: #ACB0B9;          
+  --Gray-50: #858B97;       
+  --Gray-60: #676D79;        
+  --Gray-70: #565A61; 
+  --Gray-80: #43464C;            /*버튼 글씨 색깔 363A3D*/  
+  --Gray-90: #303236;
+  --Gray-95: #26282C;
+  --Black: #1C1D20; 
+  
+  --Orange : #5e9ff2;          
+  --Dark-Orange : #0460d9;     
+  
+  --Main-0 : #f2f2f2;          
+  --Main-3 : #f2f8ff;   
+  --Main-5 : #cde2ff;
+  --Main-10: #89abd9;       
+  --Main-20 : #5e9ff2;           
+  --Main-30 : #327ad9;           
+  --Main-40 : #2A68D2;                 
+  --Main-60 : #2e5393;                 
+  --Blue-Gray : #F3F5F7;
+  --Sub-Title : #757575;
+  --Siren : #EA726F; 
+  --Banner : #cde2ff;
+  --yellow : #ffb40a;
+  --yellow-10: #FFF0CD;
+
+  --Ad-Main-0 : #f2f2f2;
+  --Ad-Main-10 : #e2e9e3;
+  --Ad-Main-20 : #e0f1e2;
+  --Ad-Main-30 : #c3dfc6;
+  --Ad-Main-50 : #12681c;
+  --Ad-Main-60 : #0a4911;
+  --Ad-Main-80 : #042a08;
+}

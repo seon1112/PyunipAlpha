@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	SYSTEM "C:\Dev\mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.LogMapper">
+  <!-- 로그삽입 -->
+  <insert id="insertAcssLog">
+    INSERT INTO ACSS_LOG(
+      ACSS_LOG_NUM
+      ,ACSS_DTM
+      ,USER_NUM
+      ,USER_NM
+      ,ACSS_IP
+      ,LOG
+    )
+    VALUES
+    (
+      #{ACSS_LOG_NUM}
+      ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+      ,#{USER_NUM}
+      ,#{USER_NM}
+      ,#{ACSS_IP}
+      ,#{LOG}
+    )
+  </insert>
+  
+  <!-- 로그 next num -->
+  <select id="getNextAcssLogNum" resultType="_int">
+  SELECT COALESCE(MAX(ACSS_LOG_NUM),0)+1 FROM ACSS_LOG
+  </select>
+  
+  <!-- 로그조회 -->
+  <select id="findAcssLog" resultType="com.example.demo.dto.AcssLogDto">
+  SELECT 
+  		DATE_FORMAT(STR_TO_DATE(AL.ACSS_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d %H:%i:%s') AS ACSS_DTM
+  		,U.USER_NM
+  		,CASE WHEN ROLE = 'USER' THEN '사용자'
+  			  WHEN ROLE = 'ADMIN' THEN '관리자'
+  		 END AS ROLE
+  		,AL.ACSS_IP
+  FROM 	ACSS_LOG AL
+  LEFT OUTER JOIN USERS U ON U.USER_NUM = AL.USER_NUM 	
+  <where>
+     <if test="SCH != null and SCH != '' ">
+     AND (U.USER_NM LIKE  CONCAT('%', #{SCH}, '%'))
+     </if>	  
+  </where>
+  ORDER BY AL.ACSS_DTM DESC
+  <if test="nSelectPage != null and nSelectPage != '' ">    
+  LIMIT #{nSelectPage}, #{nMaxVCnt}
+  </if> 
+  </select>
+  
+   <!-- 로그 삽입 -->
+   <insert id="insertAcssFailLog">
+    INSERT INTO ACSS_FAIL_LOG(
+      ACSS_FAIL_NUM
+      ,FAIL_DTM
+      ,USER_NM
+      ,ACSS_IP
+      ,FAIL_ROUTE
+    )
+    VALUES
+    (
+      #{ACSS_FAIL_NUM}
+      ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+      ,#{USER_NM}
+      ,#{ACSS_IP}
+      ,#{FAIL_ROUTE}
+    )
+  </insert>
+  
+  <!-- 로그 next num -->
+  <select id="getNextAcssFailNum" resultType="_int">
+  SELECT COALESCE(MAX(ACSS_FAIL_NUM),0)+1 FROM ACSS_FAIL_LOG
+  </select>
+  
+   <!-- 로그 삽입 -->
+   <insert id="insertErrorLog">
+    INSERT INTO ERROR_LOG(
+      ERROR_NUM
+      ,ERROR_TIME
+      ,ERROR_URL
+      ,ERROR
+      <if test="USER_NUM != null and USER_NUM != '' ">
+      ,USER_NUM
+      </if>
+    )
+    VALUES
+    (
+      #{ERROR_NUM}
+      ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+      ,#{ERROR_URL}
+      ,#{ERROR}
+      <if test="USER_NUM != null and USER_NUM != '' ">
+      ,#{USER_NUM}
+      </if>
+    )
+  </insert>
+  
+  <!--다음번호 -->	
+  <select id="getNextErrorNum" resultType="_int">
+  SELECT COALESCE(MAX(ERROR_NUM),0)+1 FROM ERROR_LOG
+  </select>	    
+</mapper>

@@ -1,0 +1,28 @@
+@charset "UTF-8";
+.paging{
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 16px;
+  margin-top: 20px;
+}
+.paging > ul > li{
+  padding:12px 9px 15px 9px;
+  font-size: 16px;
+}
+.paging > ul > li{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1.1;
+  background-color: var(--White);
+  color: var(--Gray-40);
+  cursor: pointer;
+}
+.paging > ul> .select_on{
+  color: var(--Black);
+}
+.prev, .next{
+  padding:8px 0px !important;
+  margin-left: 0;
+}

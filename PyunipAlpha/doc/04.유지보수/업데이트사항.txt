@@ -1,0 +1,68 @@
+<240625>
+1. users
+   - hint 컬럼 삭제
+   - 비밀번호      PASSWORD      VARCHAR2(100)    NOT NULL   컬럼 삭제
+   - 비밀번호실패  PWD_FAIL		NUMBER(1)        DEFAULT 0     컬럼 삭제
+   - 소셜여부 	SOCIAL_YN     VARCHAR2(1)      DEFAULT 'N'     컬럼 삭제
+   	(자체로그인 기능 삭제로 필요없는 컬럼 삭제)
+   - ROLE --> ROLE_USER / ROLE_ADMIN으로 변경
+   	 VARCHAR(5) -> VARCHAR(10)으로 변경
+   	 (ADMIN을 SECURITY가 인식하지 못해 ROLE_ADMIN으로 변경함)
+   - SOCIAL_NM 컬럼 추가 
+   - CLIENT_ID를 NOT NULL로 변경
+2. boardService @transactional 수정
+   - 파일이 포함된 게시물을 추가/수정 시 fileService와 함께 transaction을 진행
+3. SLT_DETAIL_INFO의 항목들 모두 varchar(10)으로 변경
+	--> 점수 항목 뿐만 아니라 pass/nopass 항목이 있어 number에서 varchar로 변경
+4. myPage_form 에서 자체로그인 관련 코드 삭제
+5. admin 페이지에 user테이블 컬럼 변경된 부분 수정
+	-> 소셜로그인 관련 문제가 발생함 차후 수정 필요
+
+<240626>
+1. users 
+   - refresh_token 컬럼 추가
+   	-> 관리자가 회원을 탈퇴시킬 때 accessToken이 없어 탈퇴를 진행할 수 없어 db 저장 필요성을 느낌
+   	   access_token은 만료기간이 짧아 refresh_token을 가져와서 저장
+2. encry : refresh_token 암호화를 위한 class 추가
+3. securityConfig : refresh_token을 가져오기 위한 코드 수정 및 class 추가
+4. OAuthUserService : 카카오 로그인 및 탈퇴 코드 수정
+	-> naver는 아직 진행하지 않음 
+5. myPage_form에서 이메일 정보가 나오지 않아 수정
+
+<240627>
+1. 개인정보처리방침, 서비스이용약관 추가
+	->문의메일 helpalpha0627@gmail.com
+2. 관리자페이지 사용자 탈퇴 코드 수정
+3. user_num VARCHAR2(14), brd_num VARCHAR2(14), reg_user_num VARCHAR2(14)  변경
+--> 암호화를 위해
+
+<240628>
+1. user관련 클래스명 변경 
+2. BRD_NUM,USER_NUM 등 중요PK 암호화
+3. 메인페이지 css 오류 수정 
+4. boardStudyDto 설정 오류 수정
+5. 파일 용량 1개 당 업로드 용량 10MB -> 20MB로 수정 ,파일 용량 초과 시 오류 문구 추가 
+6. 이모지를 사용하려 content에 오류 발생
+->MySQL의 경우, `utf8` 문자셋은 최대 3바이트까지만 저장할 수 있어서 일부 이모지와 같은 4바이트 문자를 저장하지 못합니다.
+ 따라서, `utf8mb4` 문자셋을 사용해야 합니다.
+-> title, content 문자셋 변경
+->
+   ALTER TABLE BOARD MODIFY COLUMN CONTENT TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ALTER TABLE BOARD MODIFY COLUMN TITLE TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   
+<240701>
+1. BOARD_SUC -> SUC_YY        VARCHAR(10) 으로 변경
+2. 성공스토리 title font 사이즈 20px로 변경
+3. meta data 한글깨짐 오류 수정
+4. 네이버 로그인 구현 (아직 검수 중)   
+5. next num 가져올 때 예외 발생, number에서 varchar로 형태르 바꾸면서 오류 생김
+max로 값을 구하니 10보다 9가 크다고 인식 -> 오류 수정
+6. 인코딩 후 값을 넘길때 url에서 +를 공백으로 인식하려 오류 발생 -> UrlEncoder로 변경
+
+<240702>
+1. 학과목록이 중복되서 출력
+2. brd_num을 기준으로 정렬되니 string이라 문제 발생
+3. main lineHeight 수정하기
+4. 합격인증샷 수정
+5. 편입정보 반응형 수정
+   

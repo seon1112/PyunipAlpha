@@ -1,0 +1,306 @@
+@charset "UTF-8";
+.login_header{
+  box-shadow: none;
+  background-color: var(--White);
+}
+.info_wrap{
+  width: 100%;
+  height: 100%;
+}
+.info_form{
+  margin:50px auto 40px auto;
+  height: 550px;
+  width: 800px;  
+}
+.info_title_box{
+  width: 100%;
+  text-align: center;
+  font-size: 23px;
+  font-weight: 600;
+  color:var(--Gray-80);
+  line-height: 36px;
+}
+
+.login_content{
+  background-color: var(--Blue-Gray);;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.login_content .login_wrap{
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 100px;
+}
+.login_content .login_wrap .login_title_wrap{
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+.login_content .login_wrap .login_title_wrap > span:first-child{
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 34px;
+}
+.login_content .login_wrap .login_title_wrap > span:last-child{
+  color: var(--Gray-50);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.login_content .login_wrap .social_box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login_content .login_wrap .social_box > .social_item{
+  width: 359px;
+/*  height: 52px;*/
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+.login_content .login_wrap .social_box > .social_item#naver{
+  background-image: url('../image/icon/naver.png');
+  background-color: #03c75a;
+  background-size: 100%;  
+  height: 90px;
+}
+.login_content .login_wrap .social_box > .social_item#kakao{
+  background-image: url('../image/icon/kakao.png');
+  background-color: #fee500;
+  background-size: 100%;  
+  height: 90px;
+}
+
+.login_mid_line{
+  height: 1px;
+  width: 100%;
+  border : 1px dotted var(--Gray-30);
+}
+/*여기부터 필요없음*/
+.login_form{
+  height: 550px;
+  width: 450px;
+  border-radius: 8px;
+  background-color: var(--White);
+  margin-top:80px;
+  border:1px solid var(--Gray-20);
+}
+.login_form > ul
+{
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;  
+  padding: 0;
+  margin:0;
+  font-size: 0;
+  width: 100%;
+}
+.login_form > ul > li
+{
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: var(--Gray-10);
+  width: calc( 100% / 2 );
+  padding: 12px 0px;
+  cursor: pointer;
+  text-align: center;
+}
+.login_form > ul > li.tab_selected{
+  background-color: var(--White);
+  color: var(--Dark-Orange);   
+}
+.login_box
+{
+  padding: 35px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.login_info{
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pwd_info_form{
+  display: flex;
+  justify-content: space-between;
+}
+.email_input{
+  background-image: url('../image/icon/user_icon.png');
+}
+.pwd_input{
+  background-image: url('../image/icon/pwd_icon.png');
+}
+.email_input
+,.pwd_input
+,.num_input
+{
+  width: 100%;
+  border: 1px solid var(--Gray-20);
+  background-color: var(--Gray-5);
+  border-radius: 10px;
+  padding: 15px 13px 15px 42px;
+  background-position: 4% center;
+  background-repeat: no-repeat;
+  background-size: 20px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 16px;    
+}
+
+.email_input:not(:read-only):hover
+,.pwd_input:not(:read-only):hover
+,.num_input:not(:read-only):hover{
+  border: 1px solid var(--Gray-50);
+  background-color: var(--White);
+}
+
+.email_input:not(:read-only):focus
+,.pwd_input:not(:read-only):focus
+,.num_input:not(:read-only):focus{
+  border: 1px solid var(--Main-40);
+  background-color: var(--White);
+}
+
+.email_input:read-only
+,.pwd_input:read-only
+{
+  background-color: var(--Gray-20);
+}
+
+.info_wrap .info_form .email_input
+,.info_wrap .info_form .pwd_input
+{
+  background-position: 2% center;
+}
+
+.num_input{
+  padding: 15px 13px 15px 13px;
+}
+.pwd_input{
+  padding-right: 42px;
+}
+.eye_icon{
+  position: absolute;
+  right: 15px;
+  top: 40px;
+}
+.eye_off
+,.eye_on
+{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: none;
+}
+.eye_icon > .eye_selected{
+  display: block;
+}
+.update_pwd{
+  color: var(--Main-30);
+  font-size: 14px;
+}
+
+.socail_form{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+.sign_box{
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  gap: 10px;
+}
+
+.email_confirm
+,.pwd_confirm
+,.pwd_double_confirm
+,.nickname_confirm
+{
+  display: none;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 0px;
+}
+.confirm{
+  display:block;
+  color: var(--Gray-40);
+}
+.noconfirm{
+  display: block;
+  color: rgb(255, 0, 0);
+}
+.pwd_confirm.confirm::after{
+  content: '올바른 비밀번호입니다.';
+}
+.pwd_confirm.noconfirm::after{
+  content: '비밀번호 규칙을 준수해주세요.';
+}
+.pwd_double_confirm.noconfirm::after{
+  content: '비밀번호가 일치하지 않습니다.';
+}
+.pwd_double_confirm.confirm::after{
+  content: '올바르게 입력되었습니다.';
+}
+.nickname_confirm.confirm::after{
+  content: '사용 가능한 닉네임 입니다.';
+}
+.nickname_confirm.noconfirm::after{
+  content: '사용 불가능한 닉네임 입니다.';
+}
+.email_confirm.confirm::after{
+  content: '이메일이 인증되었습니다.';
+}
+.email_confirm.noconfirm::after{
+  content: '이메일 인증에 실패하였습니다.';
+}
+
+@media screen and (max-width: 1180px){
+  .login_content .login_wrap{
+    gap: 30px;
+    margin-top: 80px;
+  }
+  .login_content .login_wrap .login_title_wrap{
+    gap: 10px;
+  }
+  .login_content .login_wrap .login_title_wrap > span:first-child{
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .login_content .login_wrap .login_title_wrap > span:last-child{
+    font-size: 14px;
+    line-height: 18px;
+  }
+  
+  .login_content .login_wrap .social_box{
+    gap: 10px;
+    padding :0 20px;
+  }
+  
+  .login_content .login_wrap .social_box > .social_item{
+    width: 248px;
+  }
+  
+  .login_content .login_wrap .social_box > .social_item#naver{
+    height: 73px;
+  }
+  .login_content .login_wrap .social_box > .social_item#kakao{
+    height: 73px;
+  }
+  
+}

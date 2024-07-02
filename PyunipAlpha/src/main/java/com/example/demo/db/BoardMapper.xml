@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	SYSTEM "C:\Dev\mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.BoardMapper">
+  <!-- 게시물 번호 조회 -->
+  <select id="findBoardNum" resultType="String">
+  SELECT BRD_NUM FROM BOARD
+  </select>
+  
+  <!-- 인기글(조회수) (3주이내) -->
+  <select id="findBoardByView" resultType="com.example.demo.dto.BoardDto">
+  SELECT BRD_NUM
+        ,BRD_CTG
+        ,BRD_DV
+        ,TITLE
+        ,CONTENT
+        ,VIEW_CNT
+        ,LIKE_CNT
+        ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+        ,DATE_FORMAT(STR_TO_DATE(REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+  FROM BOARD B
+  WHERE BRD_CTG = #{BRD_CTG}
+  		AND DATEDIFF(STR_TO_DATE(REG_DTM, '%Y%m%d%H%i%s'), NOW()) BETWEEN -21 AND 0
+  ORDER BY VIEW_CNT DESC
+  </select>
+  
+  <!-- 편입 스터디 인기글 조회(조회수) (3주이내) -->
+  <select id="findBoardStudyByView" resultType="com.example.demo.dto.BoardStudyDto">
+ SELECT B.BRD_NUM
+       ,BRD_CTG
+       ,BRD_DV
+       ,TITLE
+       ,CONTENT
+       ,VIEW_CNT
+       ,LIKE_CNT
+       ,CASE WHEN DATEDIFF(STR_TO_DATE(BS.APPLY_ED_DTM,'%Y%m%d'),CURDATE()) BETWEEN 0 AND 7 THEN 'Y'
+        ELSE 'N'
+        END AS ED_YN   
+       ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+       ,DATE_FORMAT(STR_TO_DATE(BS.APPLY_ED_DTM, '%Y%m%d'), '%Y.%m.%d')AS APPLY_ED_DTM
+       ,DATE_FORMAT(STR_TO_DATE(BS.ST_DTM, '%Y%m%d'), '%Y.%m.%d')AS ST_DTM
+       ,CASE WHEN (PCD_WAY=0) THEN '온라인'
+             WHEN (PCD_WAY=1) THEN '오프라인'
+             WHEN (PCD_WAY=2) THEN '온라인 + 오프라인'
+        END AS PCD_WAY      
+       ,BS.PCD_WAY
+       ,B.REG_DTM
+  FROM BOARD B
+  LEFT JOIN BOARD_STUDY BS ON BS.BRD_NUM = B.BRD_NUM
+  WHERE BRD_CTG = #{BRD_CTG}
+        AND DATEDIFF(STR_TO_DATE(B.REG_DTM, '%Y%m%d%H%i%s'), NOW()) BETWEEN -21 AND 0
+  ORDER BY VIEW_CNT DESC
+  </select>
+  
+  <!-- 스터디 조회 -->
+  <select id="findStudyByNum" resultType="com.example.demo.dto.BoardDto">
+  SELECT B.BRD_NUM
+        ,BRD_CTG
+        ,TITLE
+        ,CONTENT
+        ,REG_USER_NUM
+        ,DATE_FORMAT(STR_TO_DATE(REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+        ,VIEW_CNT
+        ,LIKE_CNT
+        ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+        ,DATE_FORMAT(STR_TO_DATE(BS.ED_DTM, '%Y%m%d'), '%Y.%m.%d') AS ED_DTM
+        ,DATE_FORMAT(STR_TO_DATE(BS.ST_DTM, '%Y%m%d'), '%Y.%m.%d')AS ST_DTM
+        ,DATE_FORMAT(STR_TO_DATE(BS.APPLY_ED_DTM, '%Y%m%d'), '%Y.%m.%d')AS APPLY_ED_DTM
+        ,BS.PCD_WAY
+        ,CASE WHEN (BS.PCD_WAY=0) THEN '온라인'
+              WHEN (BS.PCD_WAY=1) THEN '오프라인'
+              WHEN (BS.PCD_WAY=2) THEN '온라인 + 오프라인'
+         END AS PCD_WAY_ST
+        ,BS.APY_SIZE
+        <if test="USER_NUM != null and USER_NUM != ''">
+        ,CASE WHEN EXISTS(
+            SELECT 1 FROM BOARD_LIKE BL WHERE BL.BRD_NUM=B.BRD_NUM AND USER_NUM=#{USER_NUM}
+          )
+          THEN 'Y'
+          ELSE 'N'
+          END AS LIKE_YN            
+        </if>
+  FROM BOARD B
+  LEFT JOIN BOARD_STUDY BS ON BS.BRD_NUM = B.BRD_NUM
+  WHERE BRD_CTG = #{BRD_CTG}
+        AND B.BRD_NUM = #{BRD_NUM}
+  </select>
+  
+  <!-- 게시물 목록 조회(스터디) -->
+  <select id="findStudyByCtg" resultType="com.example.demo.dto.BoardDto">
+  SELECT
+      BRD_NUM
+      ,BRD_CTG
+      ,TITLE
+      ,CONTENT
+      ,REG_USER_NUM
+      ,REG_DTM
+      ,VIEW_CNT
+      ,LIKE_CNT
+      ,ED_YN       
+      ,USER_NM
+      ,ED_DTM
+      ,ST_DTM
+      ,APPLY_ED_DTM
+      ,PCD_WAY
+      ,APY_SIZE
+	  ,PCD_WAY_ST            
+      <if test="USER_NUM != null and USER_NUM != ''">
+      ,LIKE_YN        
+      </if>    
+  FROM(
+  	  SELECT 
+	      B.BRD_NUM
+	      ,BRD_CTG
+	      ,TITLE
+	      ,CONTENT
+	      ,REG_USER_NUM
+	      ,DATE_FORMAT(STR_TO_DATE(REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+	      ,VIEW_CNT
+	      ,LIKE_CNT
+	      ,CASE WHEN DATEDIFF(STR_TO_DATE(BS.APPLY_ED_DTM, '%Y%m%d'), CURDATE()) BETWEEN 0 AND 7 THEN 'Y'
+	       ELSE 'N'
+	       END AS ED_YN       
+	      ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+	      ,DATE_FORMAT(STR_TO_DATE(BS.ED_DTM, '%Y%m%d'), '%Y.%m.%d')AS ED_DTM
+	      ,DATE_FORMAT(STR_TO_DATE(BS.ST_DTM, '%Y%m%d'), '%Y.%m.%d')AS ST_DTM
+	      ,DATE_FORMAT(STR_TO_DATE(BS.APPLY_ED_DTM, '%Y%m%d'), '%Y.%m.%d')AS APPLY_ED_DTM
+	      ,BS.PCD_WAY
+	      ,BS.APY_SIZE
+		  ,CASE WHEN (BS.PCD_WAY=0) THEN '온라인'
+		        WHEN (BS.PCD_WAY=1) THEN '오프라인'
+		        WHEN (BS.PCD_WAY=2) THEN '온라인 + 오프라인'
+	      END AS PCD_WAY_ST            
+	      <if test="USER_NUM != null and USER_NUM != ''">
+	      ,CASE WHEN EXISTS(
+	          SELECT 1 FROM BOARD_LIKE BL WHERE BL.BRD_NUM=B.BRD_NUM AND USER_NUM=#{USER_NUM}
+	        )
+	        THEN 'Y'
+	        ELSE 'N'
+	        END AS LIKE_YN        
+	      </if>    
+      FROM BOARD B
+	  LEFT JOIN BOARD_STUDY BS ON BS.BRD_NUM = B.BRD_NUM
+	  )SUB
+      WHERE BRD_CTG = #{BRD_CTG}
+      <if test="SCH != null and SCH != '' ">
+      AND (TITLE LIKE CONCAT('%', #{SCH}, '%') OR CONTENT LIKE CONCAT('%', #{SCH}, '%'))
+      </if>
+      <if test="ING != null and ING != '' ">
+       AND DATEDIFF(STR_TO_DATE(APPLY_ED_DTM,'%Y%m%d'),CURDATE())<![CDATA[>]]> -1
+      </if>  
+      <if test="BRD_NUM != null and BRD_NUM != '' ">
+       AND BRD_NUM = #{BRD_NUM}
+      </if>	        
+      <if test="MINE != null and MINE != '' ">
+      AND REG_USER_NUM = #{USER_NUM}
+      </if>	    
+      <if test="HEART != null and HEART != '' ">
+      AND LIKE_YN = 'Y'
+      </if>	    
+      ORDER BY REG_DTM DESC
+  </select>
+  
+  <!-- 게시물 목록 조회(스터디제외) -->
+  <select id="findBoardByCtg" resultType="com.example.demo.dto.BoardDto">
+  SELECT 
+        BRD_NUM
+        ,BRD_CTG
+        ,BRD_DV
+        ,TITLE
+        ,CONTENT
+        ,VIEW_CNT
+        ,LIKE_CNT
+        ,TOP_NOTICE_YN
+        ,REG_DTM
+        ,REG_USER_NUM
+        ,USER_NM
+        <if test="USER_NUM != null and USER_NUM != ''">
+        ,LIKE_YN
+	    </if>
+	    ,FILE_YN  
+  FROM(
+      SELECT 
+        B.BRD_NUM
+        ,BRD_CTG
+        ,BRD_DV
+        ,TITLE
+        ,CONTENT
+        ,VIEW_CNT
+        ,LIKE_CNT
+        ,TOP_NOTICE_YN
+        ,DATE_FORMAT(STR_TO_DATE(REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+        ,REG_USER_NUM
+        ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+        <if test="USER_NUM != null and USER_NUM != ''">
+        ,CASE WHEN EXISTS(
+	        SELECT 1 FROM BOARD_LIKE BL WHERE BL.BRD_NUM=B.BRD_NUM AND USER_NUM=#{USER_NUM}
+	      )
+	      THEN 'Y'
+	      ELSE 'N'
+	      END AS LIKE_YN
+	    </if>
+	    ,CASE WHEN EXISTS(
+	        SELECT 1 FROM FILES FL WHERE FL.BRD_NUM=B.BRD_NUM
+	      )
+	     THEN 'Y'
+	     ELSE 'N'
+	     END AS FILE_YN
+	  FROM BOARD B		 
+	  )SUB
+  WHERE BRD_CTG = #{BRD_CTG}
+	  <if test="DV != null and DV != '' ">
+	  AND BRD_DV = #{DV} 
+	  </if>
+	  <if test="SCH != null and SCH != '' ">
+	  AND (TITLE LIKE CONCAT('%', #{SCH}, '%') OR CONTENT LIKE CONCAT('%', #{SCH}, '%'))
+	  </if>
+	  <if test="MINE != null and MINE != '' ">
+	  AND REG_USER_NUM = #{USER_NUM}
+	  </if>
+	  <if test="HEART != null and HEART != '' ">
+	  AND LIKE_YN = 'Y'
+	  </if>
+	  ORDER BY TOP_NOTICE_YN DESC, REG_DTM DESC
+  </select>
+  
+  <!-- 게시물 개수 조회 -->
+  <select id="findBoardSize" resultType="_int">
+  SELECT COUNT(BRD_NUM) 
+  FROM BOARD
+  WHERE BRD_CTG = #{BRD_CTG}
+  <if test="DV != null and DV != '' ">
+  AND BRD_DV = #{DV} 
+  </if>
+  <if test="SCH != null and SCH != '' ">
+  AND (TITLE LIKE CONCAT('%', #{SCH}, '%') OR CONTENT LIKE CONCAT('%', #{SCH}, '%'))
+  </if>
+  <if test="MINE != null and MINE != '' ">
+  AND REG_USER_NUM = #{USER_NUM}
+  </if>  
+  </select>
+  
+  <!-- 게시물 조회 -->
+  <select id="findBoardByNum" resultType="com.example.demo.dto.BoardDto">
+  SELECT BRD_NUM
+  		,BRD_DV
+        ,TITLE
+        ,CONTENT
+        ,VIEW_CNT
+        ,LIKE_CNT
+        ,REG_USER_NUM
+        ,TOP_NOTICE_YN
+        ,DATE_FORMAT(STR_TO_DATE(REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+        ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+        <if test="USER_NUM != null and USER_NUM != ''">
+        ,CASE WHEN EXISTS(
+		     SELECT 1 FROM BOARD_LIKE WHERE BRD_NUM=#{BRD_NUM} AND USER_NUM=#{USER_NUM}
+		   )
+		   THEN 'Y'
+		   ELSE 'N'
+		   END AS LIKE_YN
+		 </if>
+        ,CASE WHEN EXISTS(
+            SELECT 1 FROM FILES FL WHERE FL.BRD_NUM=B.BRD_NUM
+          )
+         THEN 'Y'
+         ELSE 'N'
+         END AS FILE_YN		   
+  FROM BOARD B
+  WHERE BRD_NUM = #{BRD_NUM}
+  </select>
+
+  <!-- 합격수기 게시물 조회 -->
+  <select id="findSuccessByNum" resultType="com.example.demo.dto.BoardDto">
+   SELECT 
+         B.BRD_NUM
+         ,BRD_CTG
+         ,TITLE
+         ,CONTENT
+         ,VIEW_CNT
+         ,LIKE_CNT
+         ,REG_USER_NUM
+         ,DATE_FORMAT(STR_TO_DATE(B.REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+         ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+         <if test="USER_NUM != null and USER_NUM != ''">
+         ,CASE WHEN EXISTS(
+            SELECT 1 FROM BOARD_LIKE BL WHERE BL.BRD_NUM=B.BRD_NUM AND USER_NUM=#{USER_NUM}
+          )
+          THEN 'Y'
+          ELSE 'N'
+          END AS LIKE_YN
+          </if>
+         ,BS.SUC_UNIV
+         ,BS.SUC_YY         
+   FROM BOARD B         
+   JOIN BOARD_SUC BS ON B.BRD_NUM = BS.BRD_NUM  
+   WHERE B.BRD_NUM = #{BRD_NUM}
+  </select>
+
+  <!-- 합격수기 게시물 목록 조회 -->
+  <select id="findSuccess" resultType="com.example.demo.dto.BoardDto">
+   SELECT BRD_NUM
+          ,BRD_CTG
+          ,BRD_DV
+          ,TITLE
+          ,CONTENT
+          ,VIEW_CNT
+          ,LIKE_CNT
+          ,REG_DTM
+          ,USER_NM
+          ,REG_USER_NUM
+          ,SUC_UNIV
+          ,SUC_YY
+		  <if test="USER_NUM != null and USER_NUM != ''">
+		  ,LIKE_YN
+		  </if>   
+   FROM(
+	   SELECT 
+	   		  BD.BRD_NUM
+	          ,BD.BRD_CTG
+	          ,BD.BRD_DV
+	          ,BD.TITLE
+	          ,BD.CONTENT
+	          ,BD.VIEW_CNT
+	          ,BD.LIKE_CNT
+	          ,DATE_FORMAT(STR_TO_DATE(BD.REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+	          ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = BD.REG_USER_NUM) AS USER_NM
+	          ,BD.REG_USER_NUM
+	          ,BS.SUC_UNIV
+	          ,BS.SUC_YY
+			  <if test="USER_NUM != null and USER_NUM != ''">
+			  ,CASE WHEN EXISTS(
+		            SELECT 1 FROM BOARD_LIKE BL WHERE BL.BRD_NUM=BD.BRD_NUM AND USER_NUM=#{USER_NUM}
+		          )
+		      THEN 'Y'
+		      ELSE 'N'
+		      END AS LIKE_YN
+			  </if>                 
+	    FROM BOARD BD
+	    JOIN BOARD_SUC BS ON BD.BRD_NUM = BS.BRD_NUM 
+    )SUB
+    WHERE BRD_CTG = #{BRD_CTG}
+         <if test="SCH != null and SCH != '' ">
+         AND (SUC_UNIV LIKE CONCAT('%', #{SCH}, '%') OR TITLE LIKE CONCAT('%', #{SCH}, '%'))
+         </if>
+	     <if test="MINE != null and MINE != '' ">
+	     AND REG_USER_NUM = #{USER_NUM}
+	     </if>
+	     <if test="HEART != null and HEART != '' ">
+	     AND LIKE_YN = 'Y'
+	     </if>          
+    ORDER BY REG_DTM DESC
+  </select>
+  
+  <!-- 댓글 조회 -->
+  <select id="findRpyByNum" resultType="com.example.demo.dto.RpyDto">
+  SELECT RPY_NUM
+        ,RE_RPY_NUM
+        ,CONTENT
+        ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = R.REG_USER_NUM) AS USER_NM
+        ,REG_USER_NUM
+        ,DATE_FORMAT(STR_TO_DATE(REG_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d %H:%i') AS REG_DTM
+  FROM RPY R
+  WHERE BRD_NUM = #{BRD_NUM}
+  ORDER BY RPY_NUM DESC,RE_RPY_NUM
+  </select>
+  
+  <!-- 대댓글 다음번호 -->	
+  <select id="getNextReRpyNum" resultType="_int">
+  SELECT COALESCE(MAX(RE_RPY_NUM),0)+1 FROM RPY
+  </select>	  
+  
+  <!-- 댓글 다음번호 -->	
+  <select id="getNextRpyNum" resultType="_int">
+  SELECT COALESCE(MAX(RPY_NUM),0)+1 FROM RPY
+  </select>	  
+	  
+  <!-- 댓글 추가 -->
+  <insert id="insertRpy" parameterType="com.example.demo.dto.RpyDto">
+  INSERT INTO RPY (
+    BRD_NUM
+    ,RPY_NUM
+    ,RE_RPY_NUM
+    ,CONTENT
+    ,REG_USER_NUM
+    ,REG_DTM
+    ,REG_IP
+  )VALUES(
+    #{BRD_NUM}
+   <choose>
+   <when test="RPY_NUM != null and RPY_NUM != ''">
+     ,#{RPY_NUM}
+     ,#{NEXT_RE_RPY_NUM}
+   </when>
+   <otherwise>
+     ,#{NEXT_RPY_NUM}
+     ,0
+   </otherwise>
+   </choose>
+    ,#{CONTENT}
+    ,#{REG_USER_NUM}
+    ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+    ,#{REG_IP}
+  )
+  </insert>
+  
+  <!-- 댓글 삭제 -->
+  <delete id="deleteRpy">
+  DELETE FROM RPY 
+  WHERE RPY_NUM = #{RPY_NUM}
+  <if test="RE_RPY_NUM != null and RE_RPY_NUM != '' ">
+  AND RE_RPY_NUM = #{RE_RPY_NUM}
+  </if>
+  </delete>
+  
+  <!-- 게시판 좋아요 추가 -->
+  <insert id="insertBoardLike">
+  INSERT INTO BOARD_LIKE (
+    BRD_NUM
+    ,USER_NUM
+  )VALUES(
+    #{BRD_NUM}
+    ,#{USER_NUM}
+  )
+  </insert>
+  
+  <!-- 게시판 좋아요 수 수정 -->
+  <update id="addBoardLike">
+    UPDATE BOARD SET LIKE_CNT=COALESCE(LIKE_CNT,0)+1 WHERE BRD_NUM=#{BRD_NUM}
+  </update>
+  
+  <update id="minusBoardLike">
+    UPDATE BOARD 
+    SET  LIKE_CNT=CASE WHEN (LIKE_CNT > 0) THEN LIKE_CNT-1
+                  ELSE 0
+                  END
+    WHERE BRD_NUM=#{BRD_NUM}
+  </update>
+  
+  <!-- 게시판 좋아요 삭제 -->
+  <delete id="deleteBoardLike">
+   DELETE FROM BOARD_LIKE
+   WHERE BRD_NUM=#{BRD_NUM} AND USER_NUM=#{USER_NUM}
+  </delete>
+  
+  <!-- 게시판 조회수 증가 -->
+  <update id="updateViewCnt">
+    UPDATE BOARD
+    SET VIEW_CNT=COALESCE(VIEW_CNT,0)+1
+    WHERE BRD_NUM=#{BRD_NUM}
+  </update>
+  
+  <!-- 다음 게시물 번호 -->
+  <select id="getNextNum" resultType="String">
+   SELECT COALESCE(MAX(CAST(BRD_NUM AS UNSIGNED)),0)+1 FROM BOARD
+  </select>
+  
+  <!-- 게시물 추가 -->
+  <insert id="insertBoard">
+    INSERT INTO BOARD(
+        BRD_NUM
+        ,BRD_CTG
+        ,BRD_DV
+        ,TITLE
+        <if test="CONTENT != null and CONTENT != ''">
+        ,CONTENT
+        </if>
+        ,VIEW_CNT
+        ,LIKE_CNT
+        ,REG_USER_NUM
+        ,REG_DTM
+        ,REG_IP
+        ,TOP_NOTICE_YN
+    )VALUES(
+        #{BRD_NUM}
+        ,#{BRD_CTG}
+        <choose>
+        <when test="BRD_DV != null and BRD_DV != ''">
+        ,#{BRD_DV}
+        </when>
+        <otherwise>
+        ,''
+        </otherwise>
+        </choose>
+        ,#{TITLE}
+        <if test="CONTENT != null and CONTENT != ''">
+        ,#{CONTENT}
+        </if>
+        ,0
+        ,0
+        ,#{REG_USER_NUM}
+        ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+        ,#{REG_IP}
+        <choose>
+        <when test="TOP_NOTICE_YN != null and TOP_NOTICE_YN != ''">
+        ,#{TOP_NOTICE_YN}
+        </when>
+        <otherwise>
+        ,''
+        </otherwise>
+        </choose>
+    )
+  </insert>
+  
+  <!-- 합격 수기 추가 -->
+  <insert id="insertSuc">
+    INSERT INTO BOARD_SUC(
+	  BRD_NUM,
+	  SUC_UNIV,
+	  SUC_YY
+    )VALUES(
+  	  #{BRD_NUM},
+  	  #{SUC_UNIV},
+  	  #{SUC_YY}
+    )
+  </insert>
+  
+  <!-- 스터디 추가 -->
+  <insert id="insertBoardStudy">
+    INSERT INTO BOARD_STUDY(
+        BRD_NUM
+        ,APY_SIZE
+        ,PCD_WAY
+        ,APPLY_ED_DTM
+        ,ST_DTM
+        ,ED_DTM
+    )VALUES(
+        #{BRD_NUM}
+       ,#{APY_SIZE}
+       ,#{PCD_WAY} 
+       ,#{APPLY_ED_DTM} 
+       ,#{ED_DTM} 
+       ,#{ST_DTM} 
+    )
+  </insert>
+  
+  <!-- 게시물 수정 -->
+  <update id="updateBoard">
+	UPDATE BOARD 
+	SET
+	    TITLE=#{TITLE}
+	   <if test="BRD_DV != null and BRD_DV != '' ">
+	    ,BRD_DV=#{BRD_DV}
+	   </if>
+	   <if test="CONTENT != null and CONTENT != '' ">
+	    ,CONTENT=#{CONTENT}
+	   </if>
+	    ,UPT_USER_NUM=#{UPT_USER_NUM}
+	    ,UPT_IP=#{UPT_IP}
+	    ,UPT_DTM=DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+	   <if test="TOP_NOTICE_YN != null and TOP_NOTICE_YN != '' ">
+	    ,TOP_NOTICE_YN=#{TOP_NOTICE_YN}
+	   </if>
+   WHERE BRD_NUM=#{BRD_NUM} 
+  </update>
+  
+  <!-- 스터디 수정 -->
+  <update id="updateBoardStudy">
+    UPDATE BOARD_STUDY
+    SET 
+      APY_SIZE=#{APY_SIZE}
+      ,PCD_WAY=#{PCD_WAY}
+      ,APPLY_ED_DTM=#{APPLY_ED_DTM}
+      ,ST_DTM=#{ST_DTM}
+      ,ED_DTM=#{ED_DTM}
+    WHERE BRD_NUM=#{BRD_NUM}
+  </update>
+  
+  <!-- 합격후기 수정 -->
+  <update id="updateSuc">
+  UPDATE BOARD_SUC
+  SET
+  	SUC_UNIV = #{SUC_UNIV}
+  	,SUC_YY = #{SUC_YY}	
+  WHERE BRD_NUM = #{BRD_NUM}
+  </update>
+  
+  <!-- 게시물 삭제 -->
+  <delete id="deleteBoard">
+    DELETE FROM BOARD WHERE BRD_NUM = #{BRD_NUM}
+  </delete>
+  
+  <!-- 스터디 삭제 -->
+  <delete id="deleteStudy">
+    DELETE FROM BOARD_STUDY WHERE BRD_NUM=#{BRD_NUM}
+  </delete>
+  
+  <!-- 합격인증샷 게시물 조회 -->
+  <select id="findProofByNum" resultType="com.example.demo.dto.SuccessDto">
+   SELECT 
+         B.BRD_NUM
+         ,BRD_CTG
+         ,TITLE
+         ,VIEW_CNT
+         ,LIKE_CNT
+         ,B.REG_USER_NUM
+         ,DATE_FORMAT(STR_TO_DATE(B.REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+         ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+         <if test="USER_NUM != null and USER_NUM != ''">
+         ,CASE WHEN EXISTS(
+            SELECT 1 FROM BOARD_LIKE BL WHERE BL.BRD_NUM=B.BRD_NUM AND USER_NUM=#{USER_NUM}
+          )
+          THEN 'Y'
+          ELSE 'N'
+          END AS LIKE_YN
+          </if>
+         ,CASE WHEN EXISTS(
+            SELECT 1 FROM FILES F WHERE F.BRD_NUM=B.BRD_NUM
+          )
+          THEN 'Y'
+          ELSE 'N'
+          END AS FILE_YN
+         ,FL.FILE_NUM
+         ,FL.ORIGIN_NAME
+         ,FL.FILE_NAME
+         ,FL.FILE_SIZE
+         ,FL.FANCY_SIZE
+   FROM BOARD B         
+   LEFT JOIN FILES FL ON FL.BRD_NUM = B.BRD_NUM     
+   WHERE B.BRD_NUM = #{BRD_NUM}
+   ORDER BY B.REG_DTM DESC
+  </select>
+
+  <!-- 합격인증샷 게시물 목록 조회 -->
+  <select id="findProof" resultType="com.example.demo.dto.SuccessDto">
+  SELECT
+          BRD_NUM
+          ,BRD_CTG
+          ,TITLE
+          ,VIEW_CNT
+          ,LIKE_CNT
+          ,REG_USER_NUM
+          ,REG_DTM
+          ,USER_NM
+          <if test="USER_NUM != null and USER_NUM != ''">
+          ,LIKE_YN
+          </if>
+          ,FILE_YN
+          ,FILE_NUM
+          ,ORIGIN_NAME
+          ,FILE_NAME
+          ,FILE_SIZE
+          ,FANCY_SIZE  
+  FROM(
+    SELECT 
+          B.BRD_NUM
+          ,BRD_CTG
+          ,TITLE
+          ,VIEW_CNT
+          ,LIKE_CNT
+          ,B.REG_USER_NUM
+          ,DATE_FORMAT(STR_TO_DATE(B.REG_DTM, '%Y%m%d%H%i%s'), '%Y.%m.%d') AS REG_DTM
+          ,(SELECT U.USER_NM FROM USERS U WHERE U.USER_NUM = B.REG_USER_NUM) AS USER_NM
+          <if test="USER_NUM != null and USER_NUM != ''">
+          ,CASE WHEN EXISTS(
+              SELECT 1 FROM BOARD_LIKE BL WHERE BL.BRD_NUM=B.BRD_NUM AND USER_NUM=#{USER_NUM}
+            )
+            THEN 'Y'
+            ELSE 'N'
+            END AS LIKE_YN
+          </if>
+          ,CASE WHEN EXISTS(
+              SELECT 1 FROM FILES F WHERE F.BRD_NUM=B.BRD_NUM
+            )
+           THEN 'Y'
+           ELSE 'N'
+           END AS FILE_YN
+          ,FL.FILE_NUM
+          ,FL.ORIGIN_NAME
+          ,FL.FILE_NAME
+          ,FL.FILE_SIZE
+          ,FL.FANCY_SIZE
+    FROM BOARD B
+    LEFT JOIN FILES FL ON FL.BRD_NUM = B.BRD_NUM     
+  )SUB
+  WHERE BRD_CTG = #{BRD_CTG}
+        <if test="SCH != null and SCH != '' ">
+        AND (TITLE LIKE CONCAT('%', #{SCH}, '%'))
+        </if>
+	    <if test="MINE != null and MINE != '' ">
+	    AND REG_USER_NUM = #{USER_NUM}
+	    </if>
+	    <if test="HEART != null and HEART != '' ">
+	    AND LIKE_YN = 'Y'
+	    </if>        
+  ORDER BY REG_DTM DESC      
+  </select>
+  
+  <!-- 작성자 확인하기 -->  
+  <select id="findRegUserNumByBrdNum" resultType="String">
+  SELECT REG_USER_NUM FROM BOARD WHERE BRD_NUM=#{BRD_NUM}
+  </select>
+  
+  <!-- /////////////잠금쿼리///////////////////// -->
+  <!-- 게시물 수정 -->
+  <select id="selectBoardForUpdate" resultType="com.example.demo.dto.BoardDto">
+    SELECT 
+        BRD_DV, TITLE, CONTENT,
+        UPT_USER_NUM, UPT_DTM, UPT_IP,
+        TOP_NOTICE_YN
+    FROM BOARD 
+    WHERE BRD_NUM = #{BRD_NUM} 
+    FOR UPDATE
+  </select>
+  
+  <!-- 스터디 수정 -->
+  <select id="selectBoardStudyForUpdate" resultType="com.example.demo.dto.BoardStudyDto">
+    SELECT 
+        APY_SIZE, PCD_WAY, APPLY_ED_DTM,
+        ST_DTM, ED_DTM
+    FROM BOARD_STUDY 
+    WHERE BRD_NUM = #{BRD_NUM} 
+    FOR UPDATE
+  </select>   
+  
+  <!-- 합격후기 수정 -->
+  <select id="selectSucForUpdate" resultType="com.example.demo.dto.BoardDto">
+    SELECT 
+        SUC_UNIV, SUC_YY
+    FROM BOARD_SUC 
+    WHERE BRD_NUM = #{BRD_NUM} 
+    FOR UPDATE
+  </select>    
+</mapper>

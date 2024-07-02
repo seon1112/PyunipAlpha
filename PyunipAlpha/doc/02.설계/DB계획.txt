@@ -1,0 +1,142 @@
+회원_정보 USERS
+- 회원번호      USER_NUM      VARCHAR2(14)    PRIMARY KEY 
+- 회원이름      USER_NM       VARCHAR2(100)   NOT NULL
+- 이메일  	  EMAIL			VARCHAR2(100)  
+- 가입일       REG_DTM       VARCHAR2(14)   
+- 수정일지      UPT_DTM       VARCHAR2(14)                            
+- 권한         ROLE          VARCHAR2(10)     DEFAULT ROLE_USER	    //ROLE_ADMIN ROLE_USER	
+- 소셜아이디   CLIENT_ID      VARCHAR2(64)     	 NOT NULL
+- 소셜 		SOCIAL_NM	   VARCHAR2(7)     
+- 토큰		REFRESH_TOKEN  TEXT
+
+접속_이력 ACSS_LOG
+- 접속번호      ACSS_LOG_NUM  NUMBER       PRIMARY KEY
+- 접속시간      ACSS_DTM      VARCHAR2(14)  
+- 사용자번호    USER_NUM      VARCHAR2(14)
+- 회원이름      USER_NM       VARCHAR2(100)   NOT NULL
+- 접속IP       ACSS_IP       VARCHAR2(20)
+- 내용         LOG           VARCHAR2(100) 
+
+접속실패_이력 ACSS_FAIL_LOG
+- 접속실패번호    ACSS_FAIL_NUM  NUMBER        PRIMARY KEY
+- 접속실패시간    FAIL_DTM       VARCHAR2(14)  
+- 회원이름      USER_NM       VARCHAR2(100)   NOT NULL
+- 접속IP      ACSS_IP       VARCHAR2(20)
+- 실패사유     FAIL_ROUTE     VARCHAR2(100) 
+
+오류_이력 ERROR_LOG
+-오류번호 		ERROR_NUM  		NUMBER 		PRIMARY KEY
+-발생시간 		ERROR_TIME		VARCHAR2(14)
+-오류_URL		ERROR_URL 		VARCHAR(200)
+-오류사유		ERROR			NCLOB
+-사용자번호 	USER_NUM        VARCHAR2(14)
+
+게시판   BOARD
+- 게시글_일련번호  BRD_NUM     VARCHAR2(14)        PRIMARY KEY
+- 카테고리      BRD_CTG      VARCHAR2(1)    0 편입이야기 / 1 편입스터디 / 2 모집요강 / 3 편입뉴스 / 4 합격수기 / 5 합격인증샷
+- 구분        BRD_DV        VARCHAR2(1)    F 자유주제 / Q 질문하기
+- 제목        TITLE         NVARCHAR2(256)
+- 내용        CONTENT       NCLOB
+- 조회수       VIEW_CNT      NUMBER(10)
+- 좋아요       LIKE_CNT      NUMBER(10)
+- 등록자회원번호  REG_USER_NUM   VARCHAR2(14) 
+- 등록일시      REG_DTM       VARCHAR2(14)
+- 등록자IP     REG_IP        VARCHAR2(20)
+- 수정자회원번호  UPT_USER_NUM   VARCHAR2(14)  FOREIGN KEY
+- 수정일지      UPT_DTM       VARCHAR2(14)
+- 수정자IP     UPT_IP        VARCHAR2(20)
+- 상단공지사용유무  TOP_NOTICE_YN VARCHAR2(1)   Y사용 / N미사용
+
+게시판 좋아요 목록 BOARD_LIKE
+-게시글_일련번호  BRD_NUM        VARCHAR2(14)        PRIMARY KEY,FOREIGN KEY
+-회원번호      USER_NUM       VARCHAR2(14)        PRIMARY KEY,FOREIGN KEY
+
+스터디 게시판 BOARD_STUDY
+- 게시글_일련번호  BRD_NUM       VARCHAR2(14)        PRIMARY KEY ,FOREIGN KEY
+- 모집인원      APY_SIZE      NUMBER(3)
+- 진행방법      PCD_WAY       NUMBER(1)     0 온라인 / 1 오프라인 / 2 온라인+오프라인
+- 종료일       ED_DTM        VARCHAR2(8)  
+- 시작예정일     ST_DTM        VARCHAR2(8)
+- 스터디모집마감일  APPLY_ED_DTM VARCHAR2(8)
+
+성공 게시판 목록 BOARD_SUC
+- 게시글_일련번호    BRD_NUM       VARCHAR2(14)        PRIMARY KEY ,FOREIGN KEY
+- 합격대학교	     SUC_UNIV	   VARCHAR2(200)
+- 합격년도		     SUC_YY        VARCHAR2(10)
+
+댓글   RPY
+- 게시글_일련번호  BRD_NUM        VARCHAR2(14)       PRIMARY KEY, FOREIGN KEY
+- 댓글_일련번호   RPY_NUM        NUMBER       PRIMARY KEY
+- 대댓글_일련번호  RE_RPY_NUM     NUMBER       PRIMARY KEY
+- 내용        CONTENT        NVARCHAR2(2000)
+- 등록자회원번호  REG_USER_NUM   NUMBER         FOREIGN KEY
+- 등록일시      REG_DTM        VARCHAR2(14)
+- 등록자IP     REG_IP         VARCHAR2(20)
+
+파일 FILES
+- 파일_일련번호   FILE_NUM      NUMBER       PRIMARY KEY
+- 게시글_일련번호  BRD_NUM       VARCHAR2(14)       FOREIGN KEY 
+- 원본_파일명    ORIGIN_NAME NVARCHAR2(512)
+- 저장_파일명    FILE_NAME     VARCHAR2(100)
+- 파일_크기     FILE_SIZE     NUMBER
+- 파일_펜시_크기  FANCY_SIZE    VARCHAR2(10)
+- 파일_다운로드수  DOWN_NUM      NUMBER
+- 등록자회원번호   REG_USER_NUM  NUMBER
+- 등록일시      REG_DTM       VARCHAR2(14)
+- 등록자IP     REG_USER_IP   VARCHAR2(20)
+
+대학_정보 UNIV_INFO // 이건 매년 정보를 보관하는게 아니라 그 년도의 정보 하나만 가지고 있는다
+- 대학_일련번호   UNIV_NUM       NUMBER         PRIMARY KEY
+- 대학명       UNIV_NAME      VARCHAR2(200)
+- 주소        ADDR          VARCHAR2(500)
+- 홈페이지_주소  URL           VARCHAR2(100)   
+- 입학처_전화번호 PHONE          VARCHAR2(30)
+- 모집년도      REG_YY       VARCHAR2(4)
+- 원서_시작일    APY_ST_DTM    VARCHAR2(14)
+- 원서_종료일    APY_ED_DTM    VARCHAR2(14)
+- 원서_비고     APY_NOTE     VARCHAR2(200)
+- 전형일       SLT_DATE     VARCHAR2(45)
+- 전형일_비고    SLT_NOTE     VARCHAR2(200) 
+- 합격자발료_일정  SUC_APY_DTM  VARCHAR2(200)  /*2023.11.04(화) 11:00 + 2023.11.05(수) 12:00*/
+- 합격자발표_비고  SUC_APY_NOTE VARCHAR2(200)
+- 서류제출_일정   DOC_SUB_DTM  VARCHAR2(48)
+- 서류제출_비고   DOC_SUB_NOTE VARCHAR2(200)
+- 면접_일정     INTV_DTM     VARCHAR2(200)  /*2023.11.04(화) 11:00 + 2023.11.05(수) 12:00*/
+- 면접_비고     INTV_NOTE    VARCHAR2(200)
+- 대학_로고     LOGO         VARCHAR2(100)
+
+편입_정보  TRANS_INFO //그 대학의 편입정보 연도별로 여러개
+- 대학_일련번호   UNIV_NUM       NUMBER(3)      PRIMARY KEY, FOREIGN KEY
+- 대학상세_일련번호 TRANS_NUM     NUMBER         PRIMARY KEY
+- 계열         SERIES       VARCHAR2(1)     N 자연 / H 인문 / E 예체능
+- 학부명       DEPT_NM       VARCHAR2(500)
+- 모집단위명     MAJOR_NM      VARCHAR2(500)  
+- 모집년도      REG_YY        VARCHAR2(4)   
+- 모집인원      RECRU_SIZE    NUMBER(4)   
+- 지원인원      APY_SIZE      NUMBER
+- 경쟁률       COMPETITION   VARCHAR2(10)
+- 전형방법      SLT_WAY        VARCHAR2(50)  /*0 일반평입 ,1 학사편입, 2 특별전형*/ 
+
+
+전형방법  SLT_INFO  //그 대학의 그 년도의 상세 전형
+- 전형방법_일련번호  SLT_NUM     NUMBER(1)      PRIMARY KEY
+- 대학_일련번호   UNIV_NUM       NUMBER(3)     FOREIGN KEY
+- 전형방법       SLT_WAY     longtext   
+- 공개여부       OPEN_YN      VARCHAR2(1)     /*Y 공개 N 비공개*/
+- 지원자격(이수학점)APY_QUAL     VARCHAR2(10)   
+
+사정모형 SLT_DETAIL_INFO //그 대학의 그 년도의 상세 전형의 사정모형
+- 전형방법_일련번호  SLT_NUM     NUMBER(1)      PRIMARY KEY , FOREIGN KEY
+- 사정모형_일련번호  SLT_DETAIL_NUM NUMVER(1)   PRIMARY KEY
+- 사정모형       SLT_STEP    VARCHAR2(50)   /*일괄합산 , 1단계 + 2단계*/
+- 영어         ENG_PC      VARCHAR(10)
+- 수학         MATH_PC      VARCHAR(10)
+- 전공_계열기초   MAJOR_PC      VARCHAR(10)
+- 전적대_성적    PREV_GRADE   VARCHAR(10)
+- 면접        INTV_PC       VARCHAR(10)
+- 공인영어      RECOG_ENG_PC VARCHAR(10)
+- 기타        WHATEVER      VARCHAR(10)
+- 기타내용      WHATEVER_NOTE VARCHAR2(200)
+
+
+

@@ -1,0 +1,55 @@
+
+ **`security` 패키지**:
+   - 보안 관련 모든 로직을 포함할 수 있습니다.
+   - 인증, 인가, 암호화 등을 다루는 클래스를 포함할 수 있습니다.
+   
+com.example.demo
+    ├── controller
+    │   ├── AdminController.java
+    │   ├── BoardController.java
+    │   ├── JSoupController.java
+    │   ├── LoginController.java
+    │   ├── MainController.java
+    │   ├── PagingController.java
+    │   ├── SummerNoteController.java
+    │   ├── UnivController.java
+    │   └── UsersController.java
+    ├── config
+    │   ├── AppConfig.java
+    │   ├── MainConfig.java
+    │   ├── MyBatisConfig.java
+    │   ├── SecurityConfig.java
+    │   ├── SpringConfig.java
+    │   └── WebMvcConfig.java
+    ├── db
+    │   ├── BoardMapper.xml
+    │   ├── FilesMapper.xml
+    │   ├── LogMapper.xml
+    │   ├── UnivMapper.xml
+    │   └── UsersMapper.xml
+    ├── dto
+    │   ├── AcssFailLogDto.java
+    │   ├── AcssLogDto.java
+    │   ├── ErrorLogDto.java
+    │   ├── BoardDto.java
+    │   ├── BoardLikeDto.java
+    │   ├── BoardStudyDto.java
+    │   ├── FilesDto.java
+    │   ├── RpyDto.java
+    │   ├── SltDetailInfoDto.java
+    │   ├── SuccessDto.java
+    │   ├── TransInfoDto.java
+    │   ├── UnivInfoDto.java
+    │   └── UsersDto.java
+    ├── repository
+    │   └── MyRepository.java
+    ├── service
+    │   ├── MyService.java
+    │   └── ErrorService.java
+    ├── security  
+    │   ├── OAuthAttributes.java
+    │   ├── MemberService.java
+    │   └── UserService.java
+    └── util
+        ├── CalendarUtils.java
+        └── DateUtils.java

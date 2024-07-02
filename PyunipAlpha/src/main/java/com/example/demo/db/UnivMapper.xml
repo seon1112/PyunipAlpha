@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  SYSTEM "C:\Dev\mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UnivMapper">
+  <!-- 대학 번호, 이름 조회 -->
+  <select id="findUnivNameNum" resultType="com.example.demo.dto.UnivInfoDto">
+   SELECT 
+          UNIV_NUM
+          ,UNIV_NAME
+          ,REG_YY
+          ,DATE_FORMAT(STR_TO_DATE(APY_ST_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d') AS APY_ST_DTM 
+          ,DATE_FORMAT(STR_TO_DATE(APY_ED_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d') AS APY_ED_DTM          
+   FROM UNIV_INFO
+   <where>
+    <if test="SCH != null and SCH != '' ">
+    UNIV_NAME LIKE CONCAT('%', #{SCH}, '%') OR REG_YY LIKE CONCAT('%', #{SCH}, '%')
+    </if>   
+   </where>
+   ORDER BY UNIV_NUM
+  </select>
+  
+  <!-- 학부 조회 -->
+  <select id="findDeptNm" resultType="com.example.demo.dto.TransInfoDto">
+   SELECT MAJOR_NM
+   FROM TRANS_INFO
+   ORDER BY MAJOR_NM
+  </select>
+      
+  <!-- 대학 정보 조회 -->
+  <select id="findUnivInfo" resultType="com.example.demo.dto.UnivInfoDto">
+   SELECT UNIV_NUM
+          ,UNIV_NAME
+          ,ADDR
+          ,URL
+          ,PHONE
+          ,REG_YY
+          ,APY_ST_DTM 
+          ,APY_ED_DTM
+          ,APY_NOTE
+          ,SLT_DATE
+          ,SLT_NOTE
+          ,SUC_APY_DTM
+          ,SUC_APY_NOTE
+          ,DOC_SUB_DTM
+          ,DOC_SUB_NOTE
+          ,INTV_DTM
+          ,INTV_NOTE
+          ,LOGO
+   FROM UNIV_INFO
+   <where>
+     <if test="UNIV_NUM != null and UNIV_NUM != '' ">
+      AND UNIV_NUM = #{UNIV_NUM}
+     </if>
+   </where>
+  </select>
+  
+  <!-- 대학 일정 조회 -->
+  <select id="findApyDtm" resultType="com.example.demo.dto.UnivInfoDto">
+   SELECT UNIV_NUM
+          ,UNIV_NAME
+          ,DATE_FORMAT(STR_TO_DATE(APY_ST_DTM,'%Y%m%d%H%i%s'),'%Y-%m-%d') AS APY_ST_DTM 
+          ,DATE_FORMAT(STR_TO_DATE(APY_ED_DTM,'%Y%m%d%H%i%s'),'%Y-%m-%d') AS APY_ED_DTM
+   FROM UNIV_INFO
+  </select>
+  
+  <!-- 편입정보 조회 -->
+  <select id="findTransInfo" resultType="com.example.demo.dto.TransInfoDto">
+   SELECT 
+          T.UNIV_NUM
+          ,T.TRANS_NUM
+          ,U.UNIV_NAME
+          ,CASE WHEN SERIES = 'N' THEN '자연'
+                WHEN SERIES = 'H' THEN '인문'
+                WHEN SERIES = 'E' THEN '예체능'
+                END AS SERIES
+          ,DEPT_NM
+          ,MAJOR_NM
+          ,T.REG_YY
+          ,RECRU_SIZE
+          ,APY_SIZE
+          ,COMPETITION
+          ,CASE WHEN SLT_WAY='0' THEN '일반편입'
+                WHEN SLT_WAY='1' THEN '학사편입'
+                ELSE SLT_WAY
+                END AS SLT_WAY
+   FROM TRANS_INFO T
+   LEFT JOIN UNIV_INFO U ON U.UNIV_NUM = T.UNIV_NUM
+   <where>
+    <if test="UNIV_NUM != null and UNIV_NUM != '' ">
+    AND T.UNIV_NUM = #{UNIV_NUM}
+    </if>
+    <if test="YEAR != null and  YEAR != '' ">
+    AND T.REG_YY = #{YEAR}
+    </if>
+    <if test="SERIES != null and  SERIES != '' ">
+    AND SERIES = #{SERIES}
+    </if>
+    <if test="UNIV_NAME != null and  UNIV_NAME != '' ">
+    AND (UNIV_NAME LIKE CONCAT('%', #{UNIV_NAME}, '%') )
+    </if>
+    <if test="SLT_WAY != null and  SLT_WAY != '' ">
+     <choose>
+       <when test="SLT_WAY_2 != null and SLT_WAY_2 != '' ">
+   	     AND SLT_WAY NOT IN ('0','1')
+       </when>
+       <otherwise>
+         AND SLT_WAY = #{SLT_WAY}
+       </otherwise>
+     </choose>
+    </if>
+    <if test="MAJOR_NM != null and  MAJOR_NM != '' ">
+    AND MAJOR_NM LIKE CONCAT('%', #{MAJOR_NM}, '%')
+    </if>
+    <if test="SEARCH != null and SEARCH != ''">
+    AND (MAJOR_NM LIKE CONCAT('%', #{SEARCH}, '%')) OR (UNIV_NAME LIKE CONCAT('%', #{SEARCH}, '%'))
+    </if>
+   </where>
+   ORDER BY T.REG_YY DESC
+  </select>
+  
+  <!-- 편입 정보 조회 by num -->
+  <select id="findTransInfoByNum" resultType="com.example.demo.dto.TransInfoDto">
+   SELECT T.UNIV_NUM
+          ,T.TRANS_NUM
+          ,U.UNIV_NAME
+          ,CASE WHEN SERIES = 'N' THEN '자연'
+                WHEN SERIES = 'H' THEN '인문'
+                WHEN SERIES = 'E' THEN '예체능'
+                END AS SERIES
+          ,DEPT_NM
+          ,MAJOR_NM
+          ,T.REG_YY
+          ,RECRU_SIZE
+          ,APY_SIZE
+          ,COMPETITION
+          ,CASE WHEN SLT_WAY='0' THEN '일반편입'
+                WHEN SLT_WAY='1' THEN '학사편입'
+                ELSE SLT_WAY
+                END AS SLT_WAY
+   FROM TRANS_INFO T
+   LEFT JOIN UNIV_INFO U ON U.UNIV_NUM = T.UNIV_NUM  
+   WHERE T.UNIV_NUM = #{UNIV_NUM} AND T.TRANS_NUM = #{TRANS_NUM}
+  </select>
+  
+  <!-- 전형방법-->
+  <select id="findSltInfo" resultType="com.example.demo.dto.SltDetailInfoDto">
+	   SELECT 
+	   		  SI.UNIV_NUM
+	   		  ,U.UNIV_NAME
+	          ,SI.SLT_NUM
+	          ,SI.SLT_WAY
+  			  ,CASE WHEN OPEN_YN='Y' THEN '공개'
+  			        ELSE '비공개'
+  			        END AS OPEN_YN
+	          ,SI.APY_QUAL
+	   FROM SLT_INFO SI
+	   LEFT JOIN UNIV_INFO U ON U.UNIV_NUM = SI.UNIV_NUM
+	   <where>
+	    <if test="UNIV_NUM != null and  UNIV_NUM != '' ">
+	     AND SI.UNIV_NUM = #{UNIV_NUM}
+	    </if>   
+	    <if test="SLT_NUM != null and  SLT_NUM != '' ">
+	     AND SI.SLT_NUM = #{SLT_NUM}
+	    </if>   
+	    <if test=" OPEN_YN != null and  OPEN_YN != '' ">
+	     AND SI.OPEN_YN = #{OPEN_YN}
+	    </if>
+	    <if test="SCH != null and SCH != '' ">
+	    AND UNIV_NAME LIKE CONCAT('%', #{SCH}, '%') OR SLT_WAY LIKE CONCAT('%', #{SCH}, '%')
+	    </if> 	    
+	   </where>
+  </select>
+  
+  <!-- 사정모형 -->
+  <select id="findSltDetailInfo" resultType="com.example.demo.dto.SltDetailInfoDto">
+   SELECT 
+   		  SLT_NUM
+          ,SLT_DETAIL_NUM
+          ,SLT_STEP
+          ,ENG_PC
+          ,MATH_PC
+          ,MAJOR_PC
+          ,PREV_GRADE
+          ,INTV_PC
+          ,RECOG_ENG_PC
+          ,WHATEVER
+          ,WHATEVER_NOTE
+   FROM SLT_DETAIL_INFO SDI
+   <where>
+    <if test="SLT_NUM != null and  SLT_NUM != '' ">
+     AND SLT_NUM = #{SLT_NUM}
+    </if>   
+   </where>    
+  </select>
+ 
+  <!-- 대학정보 수정 -->
+  <update id="updateUniv">
+    UPDATE UNIV_INFO
+    SET
+      <if test="ADDR != null and ADDR != '' ">
+      ADDR =#{ADDR},
+      </if>
+      <if test="URL != null and URL != '' ">
+      URL =#{URL},
+      </if>
+      <if test="PHONE != null and PHONE != '' ">
+      PHONE =#{PHONE},
+      </if>
+      <if test="REG_YY != null and REG_YY != '' ">
+      REG_YY =#{REG_YY},
+      </if>
+      <if test="APY_ST_DTM != null and APY_ST_DTM != '' ">
+      APY_ST_DTM =#{APY_ST_DTM},
+      </if>
+      <if test="APY_ED_DTM != null and APY_ED_DTM != '' ">
+      APY_ED_DTM =#{APY_ED_DTM},
+      </if>
+      <if test="APY_NOTE != null and APY_NOTE != '' ">
+      APY_NOTE =#{APY_NOTE},
+      </if>
+      <if test="SLT_DATE != null and SLT_DATE != '' ">
+      SLT_DATE =#{SLT_DATE},
+      </if>
+      <if test="SLT_NOTE != null and SLT_NOTE != '' ">
+      SLT_NOTE =#{SLT_NOTE},
+      </if>
+      <if test="SUC_APY_DTM != null and SUC_APY_DTM != '' ">
+      SUC_APY_DTM =#{SUC_APY_DTM},
+      </if>
+      <if test="SUC_APY_NOTE != null and SUC_APY_NOTE != '' ">
+      SUC_APY_NOTE =#{SUC_APY_NOTE},
+      </if>
+      <if test="DOC_SUB_DTM != null and DOC_SUB_DTM != '' ">
+      DOC_SUB_DTM =#{DOC_SUB_DTM},
+      </if>
+      <if test="DOC_SUB_NOTE != null and DOC_SUB_NOTE != '' ">
+      DOC_SUB_NOTE =#{DOC_SUB_NOTE},
+      </if>
+      <if test="INTV_DTM != null and INTV_DTM != '' ">
+      INTV_DTM =#{INTV_DTM},
+      </if>
+      <if test="INTV_NOTE != null and INTV_NOTE != '' ">
+      INTV_NOTE =#{INTV_NOTE},
+      </if>
+      <if test="LOGO != null and LOGO != '' ">
+      LOGO =#{LOGO},
+      </if>
+      <if test="UNIV_NAME != null and UNIV_NAME != '' ">
+      UNIV_NAME =#{UNIV_NAME},
+      </if>      
+      UNIV_NUM = #{UNIV_NUM}  
+    WHERE UNIV_NUM = #{UNIV_NUM}
+  </update>
+  
+  <!-- trans_info 추가하기 -->
+  <insert id="insertTransInfo">
+  INSERT INTO TRANS_INFO(
+    UNIV_NUM,
+    TRANS_NUM,
+    SERIES,
+    DEPT_NM,
+    MAJOR_NM,
+    REG_YY,
+    RECRU_SIZE,
+    APY_SIZE,
+    COMPETITION,
+    SLT_WAY
+  )VALUES(
+    #{UNIV_NUM},
+    #{TRANS_NUM},
+    #{SERIES},
+    #{DEPT_NM},
+    #{MAJOR_NM},
+    #{REG_YY},
+    #{RECRU_SIZE},
+    #{APY_SIZE},
+    #{COMPETITION},
+    #{SLT_WAY}
+  )
+  </insert>
+  
+  <!-- next trans_num -->
+  <select id="getNextTransNum" resultType="_int">
+  SELECT COALESCE(MAX(TRANS_NUM),0)+1 FROM TRANS_INFO WHERE UNIV_NUM = #{UNIV_NUM}
+  </select>
+  
+  <!-- trans_info 수정하기 -->
+  <update id="updateTransInfo">
+  UPDATE TRANS_INFO SET
+  <if test="SERIES != null and SERIES != '' ">
+  SERIES = #{SERIES},  
+  </if>
+  <if test="DEPT_NM != null and DEPT_NM != '' ">
+  DEPT_NM = #{DEPT_NM},  
+  </if>
+  <if test="MAJOR_NM != null and MAJOR_NM != '' ">
+  MAJOR_NM = #{MAJOR_NM}, 
+  </if>
+  <if test="REG_YY != null and REG_YY != '' ">
+  REG_YY = #{REG_YY},
+  </if>
+  <if test="RECRU_SIZE != null and RECRU_SIZE != '' ">
+  RECRU_SIZE = #{RECRU_SIZE},
+  </if>
+  <if test="APY_SIZE != null and APY_SIZE != '' ">
+  APY_SIZE = #{APY_SIZE},
+  </if>
+  <if test="COMPETITION != null and COMPETITION != '' ">
+  COMPETITION = #{COMPETITION},
+  </if>
+  <if test="SLT_WAY != null and SLT_WAY != '' ">
+  SLT_WAY = #{SLT_WAY},
+  </if>
+  UNIV_NUM = #{UNIV_NUM}
+  WHERE UNIV_NUM = #{UNIV_NUM} AND TRANS_NUM = #{TRANS_NUM}
+  </update>
+
+  <!-- trans_info 삭제하기 -->  
+  <delete id="deleteTransInfo">
+  DELETE FROM TRANS_INFO WHERE UNIV_NUM = #{UNIV_NUM} AND TRANS_NUM = #{TRANS_NUM}
+  </delete>
+  
+  <!-- SLT_INFO_NUM 구하기 -->
+  <select id="findNextSltNum" resultType="_int">
+  SELECT COALESCE(MAX(SLT_NUM),0)+1 FROM SLT_INFO
+  </select>
+  
+  <!-- SLT_DETAIL_INFO_NUM 구하기 -->
+  <select id="findNextSltDetailNum" resultType="_int">
+  SELECT COALESCE(MAX(SLT_DETAIL_NUM),0)+1 FROM SLT_DETAIL_INFO WHERE SLT_NUM = #{SLT_NUM}
+  </select>
+  
+  <!-- SLT_INFO 추가하기--> 
+  <insert id="insertSltInfo">
+  INSERT INTO SLT_INFO(
+  	SLT_NUM,
+  	UNIV_NUM,
+  	SLT_WAY,
+  	OPEN_YN,
+  	APY_QUAL
+  ) VALUES(
+	#{SLT_NUM},
+	#{UNIV_NUM},
+	#{SLT_WAY},
+	#{OPEN_YN},
+	#{APY_QUAL}  
+  )
+  </insert>
+  
+  <!-- SLT_DETAIL_INFO 추가하기 -->
+  <insert id="insertSltDetailInfo">
+  INSERT INTO SLT_DETAIL_INFO(
+  	SLT_DETAIL_NUM,
+  	SLT_STEP,
+  	ENG_PC,
+  	MATH_PC,
+  	MAJOR_PC,
+  	PREV_GRADE,
+  	INTV_PC,
+  	RECOG_ENG_PC,
+  	WHATEVER,
+  	<if test="WHATEVER_NOTE != null and WHATEVER_NOTE != '' ">
+  	WHATEVER_NOTE,
+  	</if>
+  	SLT_NUM
+  )VALUES(
+  	#{SLT_DETAIL_NUM},
+  	#{SLT_STEP},
+  	#{ENG_PC},
+  	#{MATH_PC},
+  	#{MAJOR_PC},
+  	#{PREV_GRADE},
+  	#{INTV_PC},
+  	#{RECOG_ENG_PC},
+  	#{WHATEVER},
+  	<if test="WHATEVER_NOTE != null and WHATEVER_NOTE != '' ">
+  	#{WHATEVER_NOTE},
+  	</if>
+  	#{SLT_NUM}
+  )  
+  </insert>
+  
+  <!-- SLT_INFO 수정 -->
+  <update id="updateSltInfo">
+  UPDATE SLT_INFO SET 
+  <if test="UNIV_NUM != null and UNIV_NUM != '' ">
+  UNIV_NUM = #{UNIV_NUM},
+  </if>
+  <if test="OPEN_YN != null and OPEN_YN != '' ">
+  OPEN_YN = #{OPEN_YN},
+  </if>
+  <if test="SLT_WAY != null and SLT_WAY != '' ">
+  SLT_WAY = #{SLT_WAY},
+  </if>
+  <if test="APY_QUAL != null and APY_QUAL != '' ">
+  APY_QUAL = #{APY_QUAL},
+  </if>
+  SLT_NUM = #{SLT_NUM}
+  WHERE SLT_NUM = #{SLT_NUM}
+  </update>
+  
+  <!-- SLT_DETAIL_INFO 수정 -->
+  <update id="updateSltDetailInfo">
+  UPDATE SLT_DETAIL_INFO SET
+  <if test="SLT_STEP != null and SLT_STEP != '' ">
+  SLT_STEP = #{SLT_STEP},
+  </if>
+  <if test="ENG_PC != null and ENG_PC != '' ">
+  ENG_PC = #{ENG_PC},
+  </if>
+  <if test="MATH_PC != null and MATH_PC != '' ">
+  MATH_PC = #{MATH_PC},
+  </if>
+  <if test="MAJOR_PC != null and MAJOR_PC != '' ">
+  MAJOR_PC = #{MAJOR_PC},
+  </if>
+  <if test="PREV_GRADE != null and PREV_GRADE != '' ">
+  PREV_GRADE = #{PREV_GRADE},
+  </if>
+  <if test="INTV_PC != null and INTV_PC != '' ">
+  INTV_PC = #{INTV_PC},
+  </if>
+  <if test="RECOG_ENG_PC != null and RECOG_ENG_PC != '' ">
+  RECOG_ENG_PC = #{RECOG_ENG_PC},
+  </if>
+  <if test="WHATEVER != null and WHATEVER != '' ">
+  WHATEVER = #{WHATEVER},
+  </if>
+  <if test="WHATEVER_NOTE != null and WHATEVER_NOTE != '' ">
+  WHATEVER_NOTE = #{WHATEVER_NOTE},
+  </if>
+  SLT_NUM = #{SLT_NUM}
+  WHERE SLT_NUM = #{SLT_NUM} AND SLT_DETAIL_NUM = #{SLT_DETAIL_NUM}
+  </update>
+  
+  <!-- SLT_INFO 삭제 -->
+  <delete id="deleteSltInfo">
+  DELETE FROM SLT_INFO WHERE SLT_NUM = #{SLT_NUM}
+  </delete>
+  
+  <!-- SLT_DETAIL_INFO 삭제 -->
+  <delete id="deleteSltDetailInfo">
+  DELETE FROM SLT_DETAIL_INFO WHERE SLT_NUM = #{SLT_NUM} 
+  <if test="SLT_DETAIL_NUM != null and SLT_DETAIL_NUM != '' ">
+  AND SLT_DETAIL_NUM = #{SLT_DETAIL_NUM}
+  </if>
+  </delete>
+</mapper>

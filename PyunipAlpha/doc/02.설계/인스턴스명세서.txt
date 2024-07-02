@@ -1,0 +1,239 @@
+<BOARD>
+
+INSERT INTO BOARD 
+ (BRD_NUM,BRD_CTG,BRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,TOP_NOTICE_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'2','','컬렉션 프레임워크 장점','데이터 구조 및 알고리즘의 고성능 구현을 제공하여 프로그램의 성능과 품질을 향상시킨다.'
+  ,1,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),'Y');
+  INSERT INTO BOARD 
+ (BRD_NUM,BRD_CTG,BRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'0','Q','컬렉션 프레임워크 장점','관련 없는 API 간의 상호 운용성을 제공한다. (상위 인터페이스 타입으로 업캐스팅하여 사용)'
+  ,1,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),'Y');
+    INSERT INTO BOARD 
+ (BRD_NUM,BRD_CTG,BRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'0','Q','컬렉션 프레임 워크의 종류','컬렉션 프레임워크는 크게 Collection 인터페이스와 Map 인터페이스로 나뉜다.'
+  ,1,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),'Y');
+      INSERT INTO BOARD 
+ (BRD_NUM,BRD_CTG,BRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'0','Q','Iterable 인터페이스','Collection 인터페이스의 메서드를 보면 요소(객체)에 대한 추가, 삭제, 탐색은 다형성 기능으로 사용이 가능하지만, 데이터를 get 하는 메서드는 보이지 않는다. 
+왜냐하면 각 컬렉션 자료형 마다 구현하는 자료 구조가 제각각 이기 때문에 최상위 타입으로 조회하기 까다롭기 때문이다.'
+  ,1,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),'Y');
+  INSERT INTO BOARD 
+ (BRD_NUM,BRD_CTG,BRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'0','Q','큐(queue)','큐(queue)는 데이터를 꺼낼 때 항상 첫 번째 저장된 데이터를 삭제하므로, ArrayList와 같은 배열 기반의 컬렉션 클래스를 사용한다면, 데이터를 꺼낼 때마다 빈 공간을 채우기 위해 데이터의 이동 & 복사가 발생하므로 비효율적이다. 그래서 큐는 ArrayList보다 데이터의 추가/삭제가 용이한 LinkedList로 구현하는 것이 적합하다.'
+  ,1,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),'Y');
+  
+  
+INSERT INTO BOARD 
+ (BRD_NUMBRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'1','컬렉션 프레임워크 장점','데이터 구조 및 알고리즘의 고성능 구현을 제공하여 프로그램의 성능과 품질을 향상시킨다.'
+  ,1,TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'),'Y');
+  
+  INSERT INTO BOARD_STUDY 
+ (BRD_NUM,APY_SIZE,PCD_WAY,ED_DTM,ST_DTM,PCD_DTM)
+ VALUES(
+  18,5,0,'20240204','20240201','20240204~20240308'
+);
+  INSERT INTO BOARD_STUDY 
+ (BRD_NUM,APY_SIZE,PCD_WAY,ED_DTM,ST_DTM,PCD_DTM)
+ VALUES(
+  19,5,0,'20240204','20240201','20240204~20240308'
+);
+  INSERT INTO BOARD_STUDY 
+ (BRD_NUM,APY_SIZE,PCD_WAY,ED_DTM,ST_DTM,PCD_DTM)
+ VALUES(
+  20,5,0,'20240204','20240201','20240204~20240308'
+);
+  INSERT INTO BOARD_STUDY 
+ (BRD_NUM,APY_SIZE,PCD_WAY,ED_DTM,ST_DTM,PCD_DTM)
+ VALUES(
+  21,5,0,'20240204','20240201','20240204~20240308'
+);
+
+INSERT INTO BOARD 
+ (BRD_NUMBRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'1','컬렉션 프레임워크 장점2','데이터 구조 및 알고리즘의 고성능 구현을 제공하여 프로그램의 성능과 품질을 향상시킨다.'
+  ,1,SYSDATE,'Y');
+  INSERT INTO BOARD 
+ (BRD_NUMBRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'1','컬렉션 프레임워크 장점3','데이터 구조 및 알고리즘의 고성능 구현을 제공하여 프로그램의 성능과 품질을 향상시킨다.'
+  ,1,SYSDATE,'Y');
+   INSERT INTO BOARD 
+ (BRD_NUMBRD_DV,TITLE,CONTENT,REG_USER_NUM,REG_DTM,RPY_YN)
+ VALUES(
+  (SELECT NVL(MAX(BRD_NUM),0)+1 FROM BOARD)
+  ,'1','컬렉션 프레임워크 장점4','데이터 구조 및 알고리즘의 고성능 구현을 제공하여 프로그램의 성능과 품질을 향상시킨다.'
+  ,1,SYSDATE,'Y');
+  
+ <RPY>  
+  INSERT INTO RPY
+  (BRD_NUM,RPY_NUM,RE_RPY_NUM,CONTENT,REG_USER_NUM,REG_DTM)
+  VALUES(
+    18,
+    (SELECT NVL(MAX(RPY_NUM),0)+1 FROM RPY),
+    0,
+    '데이터 구조 및 알고리즘의 고성능 구현을 제공하여 프로그램의 성능과 품질을 향상시킨다.',
+    1,
+    TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS')
+  )
+  
+  <UNIV_INFO>
+  INSERT INTO UNIV_INFO
+  (
+    UNIV_NUM
+    ,UNIV_NAME
+    ,ADDR
+    ,URL
+    ,PHONE
+    ,REG_YY
+    ,APY_ST_DTM
+    ,APY_ED_DTM
+    ,APY_NOTE
+    ,SLT_DATE
+    ,SLT_NOTE
+    ,SUC_APY_DTM
+    ,SUC_APY_NOTE
+    ,DOC_SUB_DTM
+    ,DOC_SUB_NOTE
+    ,INTV_DTM
+    ,INTV_NOTE
+  )
+  VALUES
+  (
+    (SELECT NVL(MAX(UNIV_NUM),0)+1 FROM UNIV_INFO)
+    ,'건국대학교'
+    ,'서울특별시 노원구 하계동 652'
+    ,'www.naver.com'
+    ,'07072090600'
+    ,'2024'
+    ,'202412011000'
+    ,'202412041800'
+    ,'인터넷 접수(입학처 홈페이지)'
+    ,'20241217'
+    ,'본 대학 내 지정 장소 (세부 일정은 개별통지 하지 않으므로 지원자가 반드시 확인해야한다)'
+    ,' 2023.11.04(화) 11:00 ^ 2023.11.05(수) 12:00'
+    ,'본 대학 입학처 홈페이지'
+    ,'20241201 ~ 20250119'
+    ,'원서접수 사이트에서 온라인 제출'
+    ,'2023.11.04(화) 11:00 ^  2023.11.05(수) 12:00'
+    ,'본 대학 내 지정 장소 (세부 일정은 개별통지 하지 않으므로 지원자가 반드시 확인해야한다)'
+  );
+  
+  <TRANS_INFO>
+  INSERT INTO TRANS_INFO
+  (
+    UNIV_NUM
+    ,TRANS_NUM
+    ,SERIES
+    ,DEPT_NM
+    ,MAJOR_NM
+    ,REG_YY
+    ,RECRU_SIZE
+    ,APY_SIZE
+    ,COMPETITION
+    ,SLT_WAY
+  )
+  VALUES
+  (
+    2
+    ,(SELECT NVL(MAX(TRANS_NUM),0)+1 FROM TRANS_INFO WHERE UNIV_NUM=2)
+    ,'N'
+    ,'자연과학대학'
+    ,'발효융합학과'
+    ,'2023'
+    ,12
+    ,100
+    ,'1:3'
+    ,'0'
+  );
+  
+  <SLT_INFO>
+  INSERT INTO SLT_INFO
+  (
+    UNIV_NUM
+    ,SLT_NUM
+    ,SLT_WAY
+    ,REG_YY
+    ,APY_QUAL
+  )
+  VALUES
+  (
+    2
+    ,(SELECT NVL(MAX(SLT_NUM),0)+1 FROM SLT_INFO)
+    ,'[일반평입]인문계, 자연계(간호대학 제외)'
+    ,2023
+    ,'67~71'
+  );
+  
+  <SLT_DETAIL_INFO>
+  INSERT INTO SLT_DETAIL_INFO
+  (
+    SLT_NUM
+    ,SLT_DETAIL_NUM
+    ,SLT_STEP
+    ,ENG_PC
+    ,MATH_PC
+    ,MAJOR_PC
+    ,PREV_GRADE
+    ,INTV_PC
+    ,RECOG_ENG_PC
+    ,WHATEVER
+    ,WHATEVER_NOTE
+  )
+  VALUES
+  (
+    2
+    ,(SELECT NVL(MAX(SLT_DETAIL_NUM),0)+1 FROM SLT_DETAIL_INFO WHERE SLT_NUM=2) 
+    ,'일괄합산'
+    ,40
+    ,30
+    ,0
+    ,0
+    ,0
+    ,0
+    ,0
+    ,'서류'
+  );
+   INSERT INTO SLT_DETAIL_INFO
+  (
+    SLT_NUM
+    ,SLT_DETAIL_NUM
+    ,SLT_STEP
+    ,ENG_PC
+    ,MATH_PC
+    ,MAJOR_PC
+    ,PREV_GRADE
+    ,INTV_PC
+    ,RECOG_ENG_PC
+    ,WHATEVER
+    ,WHATEVER_NOTE
+  )
+  VALUES
+  (
+    1
+    ,(SELECT NVL(MAX(SLT_DETAIL_NUM),0)+1 FROM SLT_DETAIL_INFO WHERE SLT_NUM=1 )
+    ,'2단계'
+    ,0
+    ,0
+    ,10
+    ,10
+    ,10
+    ,0
+    ,0
+    ,'1단계 성적'
+  );

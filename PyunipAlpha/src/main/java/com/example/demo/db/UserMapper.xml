@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	SYSTEM "C:\Dev\mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper">
+    <!-- 소셜로그인 회원 찾기 -->
+    <select id="findUsersByClientId" resultType="com.example.demo.dto.UserDto">
+    SELECT USER_NUM
+    	   ,USER_NM
+    	   ,REG_DTM
+    	   ,ROLE
+    	   ,CLIENT_ID
+    	   ,SOCIAL_NM
+    	   ,REFRESH_TOKEN
+    FROM USERS
+    WHERE CLIENT_ID=#{CLIENT_ID}
+    </select>
+    
+    <!-- refresh token 저장 -->
+    <update id="saveRefreshToken">
+    UPDATE USERS SET REFRESH_TOKEN=#{REFRESH_TOKEN} WHERE CLIENT_ID=#{CLIENT_ID}
+    </update>
+    
+    <!-- refresh token 가져오기 -->
+    <select id="getRefreshToekn" resultType="String">
+    SELECT REFRESH_TOEKN WHERE CLIENT_ID=#{CLIENT_ID}
+    </select>
+    
+	<!-- 회원 정보 찾기 -->
+	<select id="findUsersByEmail" resultType="com.example.demo.dto.UserDto">
+	   SELECT USER_NUM
+	         ,USER_NM
+	         ,ROLE
+	         ,SOCIAL_NM
+	   FROM USERS
+	   WHERE USER_NM=#{USER_NM}
+	</select>
+	
+	<!-- 회원정보찾기 by num -->
+	<select id="findUsersByNum" resultType="com.example.demo.dto.UserDto">
+	   SELECT USER_NUM
+	         ,USER_NM
+	         ,ROLE
+	         ,SOCIAL_NM
+	         ,EMAIL
+	   FROM USERS
+	   WHERE USER_NUM=#{USER_NUM}
+	</select>
+	
+	<!-- 회원번호 가져오기 -->
+	<select id="getNextUserNum" resultType="String">
+	SELECT COALESCE( MAX(CAST(USER_NUM AS UNSIGNED)),0)+1 FROM USERS
+	</select>
+	
+	<!-- 회원 추가 -->
+	<insert id="insertUsers">
+	 INSERT INTO USERS(
+	   USER_NUM
+	   ,USER_NM
+	   ,REG_DTM
+	   ,ROLE
+	   <if test="EMAIL != null and EMAIL != '' ">
+	   ,EMAIL
+	   </if>	   
+	   <if test="CLIENT_ID != null and CLIENT_ID != '' ">
+	   ,CLIENT_ID
+	   </if>
+	   <if test="SOCIAL_NM != null and SOCIAL_NM != '' ">
+	   ,SOCIAL_NM
+	   </if>
+	 )
+	 VALUES
+	 (
+	   #{USER_NUM}
+	   ,#{USER_NM}
+	   ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+	   ,#{ROLE}
+	   <if test="EMAIL != null and EMAIL != '' ">
+	   ,#{EMAIL}
+	   </if>
+	   <if test="CLIENT_ID != null and CLIENT_ID != '' ">
+	   ,#{CLIENT_ID}
+	   </if>	   
+	   <if test="SOCIAL_NM != null and SOCIAL_NM != '' ">
+	   ,#{SOCIAL_NM}
+	   </if>	   
+	 )
+	</insert>
+		
+	<!-- 회원 정보 수정 : USER_NUM -->
+	<update id="updateUsers">
+	 UPDATE USERS SET
+	   <if test="USER_NM != null and USER_NM != '' ">
+	   USER_NM = #{USER_NM}
+	   </if>
+	   <if test="ROLE != null and ROLE != '' ">
+	   ,ROLE = #{ROLE}
+	   </if>
+	   <if test="EMAIL != null and EMAIL != '' ">
+	   ,EMAIL = #{EMAIL}
+	   </if>
+	   ,UPT_DTM= DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+	 WHERE USER_NUM = #{USER_NUM}
+	</update>
+	
+	<!-- 회원 정보 수정 : USER_NM -->
+	<update id="updateUsers2">
+	 UPDATE USERS SET
+	   PASSWORD = #{PASSWORD}
+	   ,UPT_DTM= DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+	 WHERE USER_NM = #{USER_NM}
+	</update>
+		
+	<!-- 비밀번호 변경 -->
+	<update id="updatepwd">
+	 UPDATE USERS SET
+	  PASSWORD = #{PASSWORD}
+	  ,UPT_DTM= DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+	 WHERE USER_NUM = #{USER_NUM}
+	</update>	
+	
+	<!-- 회원 삭제 -->
+	<delete id="deleteUsers">
+	  DELETE FROM USERS WHERE USER_NUM = #{USER_NUM}
+	</delete>
+	  
+	<!-- 닉네임 중복 확인 -->
+	<select id="checkUsersNm" resultType="java.lang.Integer">
+	 SELECT 
+	   CASE WHEN EXISTS (SELECT 1 FROM USERS WHERE USER_NM = #{USER_NM})
+	   THEN 1
+	   ELSE 0
+	   END AS CHECK_NICKNAME
+	 FROM DUAL
+	</select>
+	
+    <!--힌트 확인 -->
+	<select id="checkHint" resultType="_int">
+	 SELECT 
+	   CASE WHEN EXISTS (SELECT 1 FROM USERS WHERE USER_NM = #{USER_NM} AND HINT=#{HINT})
+	   THEN 1
+	   ELSE 0
+	   END AS CHECK_HINT
+	 FROM DUAL	
+	</select>
+	
+	<!-- 관리자 추가 -->
+	<update id="updateAdmin">
+	 UPDATE USERS SET ROLE='ADMIN' WHERE USER_NM = #{USE_NM}
+	</update>
+	
+	<!-- 이메일 존재 여부 확인 -->
+	<select id="checkEmail" resultType="java.lang.Integer">
+	 SELECT 
+	   CASE WHEN EXISTS (SELECT 1 FROM USERS WHERE EMAIL = #{EMAIL})
+	   THEN 1
+	   ELSE 0
+	   END AS CHECK_EMAIL
+	 FROM DUAL
+	</select>
+	
+	<!-- 비밀번호 비교 -->
+	<select id="checkPwd" resultType="_int">
+	 SELECT
+	 	CASE WHEN EXISTS (SELECT 1 FROM USERS WHERE PASSWORD=#{PASSWORD})
+	 	THEN 1
+	 	ELSE 0
+	 	END AS CHECK_PWD
+	 FROM DUAL
+	</select>
+	
+	<!-- 비밀번호 찾기 -->
+	<select id="findPwd" resultType="String">
+	 SELECT PASSWORD FROM USERS WHERE USER_NUM=#{USER_NUM}
+	</select>
+	
+	<!-- 회원 정보 찾기 : 검색어 -->
+	<select id="findUsersBySch" resultType="com.example.demo.dto.UserDto">
+	SELECT USER_NUM
+		   ,USER_NM
+		   ,ROLE
+		   ,REG_DTM
+		   ,DATE_FORMAT(STR_TO_DATE(RCT_REG_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d %H:%i:%s') AS RCT_REG_DTM
+		   ,EMAIL
+		   ,SOCIAL_NM
+	FROM(
+	   SELECT 
+	   		 U.USER_NUM
+	         ,U.USER_NM
+	         ,U.ROLE
+	         ,DATE_FORMAT(STR_TO_DATE(U.REG_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d %H:%i:%s') AS REG_DTM
+	         ,(SELECT MAX(ACSS_DTM) FROM ACSS_LOG AL WHERE AL.USER_NUM = U.USER_NUM) AS RCT_REG_DTM
+	         ,EMAIL
+	         ,SOCIAL_NM
+	   FROM USERS U
+	   <where>
+	   <if test="ROLE != null and ROLE != '' ">
+	   AND ROLE = #{ROLE}
+	   </if>	   
+       <if test="SCH != null and SCH != '' ">
+       AND (USER_NM LIKE CONCAT('%', #{SCH}, '%'))
+       </if>
+	   </where>
+    )T	   
+	</select>	
+	
+	<!-- 회원 정보 찾기 : 회원번호-->
+	<select id="findUserseByNum" resultType="com.example.demo.dto.UserDto">
+    SELECT 
+   		 U.USER_NUM
+         ,U.USER_NM
+         ,U.ROLE
+         ,U.SOCIAL_NM
+         ,U.EMAIL
+         ,DATE_FORMAT(STR_TO_DATE(U.REG_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d %H:%i:%s') AS REG_DTM
+         ,(SELECT DATE_FORMAT(STR_TO_DATE(MAX(ACSS_DTM),'%Y%m%d%H%i%s'),'%Y.%m.%d %H:%i:%s') AS RCT_REG_DTM FROM ACSS_LOG AL WHERE AL.USER_NUM = U.USER_NUM) AS RCT_REG_DTM
+    FROM USERS U
+    WHERE USER_NUM = #{USER_NUM}	
+	</select>
+	
+	<!-- 비밀번호 실패 횟수 추가 -->
+	<update id="updatePwdFail">
+	UPDATE USERS 
+	SET
+	PWD_FAIL = PWD_FAIL +1
+	WHERE USER_NUM = #{USER_NUM}
+	</update>
+	
+	<!-- 로그인 성공 시 실패횟수 0 -->
+	<update id="updatePwdFailZero">
+	UPDATE USERS
+	SET
+	PWD_FAIL = 0
+	WHERE USER_NUM = #{USER_NUM}
+	</update>
+	
+	<!-- 비밀번호 실패 횟수 조회 -->
+	<select id="findPwdFail" resultType="_int">
+	SELECT PWD_FAIL 
+	FROM USERS 
+	WHERE USER_NUM = #{USER_NUM}
+	</select>
+
+</mapper>

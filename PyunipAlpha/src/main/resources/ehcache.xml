@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="<http://www.w3.org/2001/XMLSchema-instance>"
+        xmlns="<http://www.ehcache.org/v3>"
+        xsi:schemaLocation="<http://www.ehcache.org/v3> <http://www.ehcache.org/schema/ehcache-core.xsd>">
+
+    <cache alias="univCache">
+        <resources>
+            <heap unit="entries">1000</heap> <!-- 최대 1000개의 엔트리를 메모리에 저장 -->
+        </resources>
+        <expiry>
+            <ttl unit="minutes">60</ttl> <!-- 60분 후 캐시 만료 -->
+        </expiry>
+        <eviction>
+            <strategy>LRU</strategy>
+        </eviction>        
+    </cache>
+    <cache alias="calendarEventCache">
+        <resources>
+            <heap unit="entries">1000</heap> <!-- 최대 1000개의 엔트리를 메모리에 저장 -->
+        </resources>
+        <expiry>
+            <ttl unit="minutes">60</ttl> <!-- 60분 후 캐시 만료 -->
+        </expiry>
+        <eviction>
+            <strategy>LRU</strategy>
+        </eviction>        
+    </cache>
+
+</config>

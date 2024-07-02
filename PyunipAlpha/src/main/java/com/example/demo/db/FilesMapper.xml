@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	SYSTEM "C:\Dev\mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.FilesMapper">
+  <!-- 파일 추가 -->
+  <insert id="insertFiles">
+    INSERT INTO FILES(
+      FILE_NUM
+      ,BRD_NUM
+      ,ORIGIN_NAME
+      ,FILE_NAME
+      ,FILE_SIZE
+      ,FANCY_SIZE
+      ,DOWN_NUM
+      ,REG_USER_NUM
+      ,REG_DTM
+      ,REG_USER_IP
+    )VALUES(
+      #{FILE_NUM}
+      ,#{BRD_NUM}
+      ,#{ORIGIN_NAME}
+      ,#{FILE_NAME}
+      ,#{FILE_SIZE}
+      ,#{FANCY_SIZE}
+      ,#{DOWN_NUM}
+      ,#{REG_USER_NUM}
+      ,DATE_FORMAT(NOW(),'%Y%m%d%H%i%s')
+      ,#{REG_USER_IP}
+    )  
+  </insert>
+  
+  <!-- 파일 NEXT NUM -->
+  <select id="getNextFileNum" resultType="_int">
+  SELECT COALESCE(MAX(FILE_NUM),0)+1 FROM FILES
+  </select>
+  
+  <!-- 파일 조회 -->
+  <select id="findFilesByNum" resultType="com.example.demo.dto.FilesDto">
+    SELECT 
+      FILE_NUM
+      ,BRD_NUM
+      ,ORIGIN_NAME
+      ,FILE_NAME
+      ,FILE_SIZE
+      ,FANCY_SIZE
+      ,DOWN_NUM
+      ,(SELECT USER_NM FROM USERS U WHERE U.USER_NUM = F.REG_USER_NUM) AS USER_NM
+      ,DATE_FORMAT(STR_TO_DATE(REG_DTM,'%Y%m%d%H%i%s'),'%Y.%m.%d %H:%i:%s') AS REG_DTM
+    FROM FILES F
+    <where>
+      <if test="BRD_NUM != null and BRD_NUM != '' ">
+        AND BRD_NUM = #{BRD_NUM}    
+      </if>
+      <if test="FILE_NUM != null and FILE_NUM != '' ">
+        AND FILE_NUM = #{FILE_NUM}
+      </if>
+    </where>
+  </select>
+  
+  <!-- 파일 삭제 -->
+  <delete id="deleteFilesByName">
+    DELETE FROM FILES WHERE FILE_NAME = #{FILE_NAME} AND BRD_NUM = #{BRD_NUM}
+  </delete>
+  
+  <!-- 다운로드 수 -->
+  <update id="download">
+    UPDATE FILES SET DOWN_NUM=COALESCE(DOWN_NUM,0)+1 WHERE FILE_NUM = #{FILE_NUM}
+  </update>
+</mapper>
