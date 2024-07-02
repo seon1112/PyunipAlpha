@@ -21,7 +21,7 @@
 			   </c:otherwise>
 			  </c:choose>
 			  <div class="item_content_box">
-			    <div class="item_title"><c:out value="${a.TITLE}"></c:out></div>
+			    <div class="item_title fix_hieght"><c:out value="${a.TITLE}"></c:out></div>
 			    <div class="item_middle_line"></div>
 			    <div class="item_info_wrap">
 			      <div class="item_info">
@@ -29,14 +29,14 @@
 			      </div>
 		          <div class="item_info" aria-label="좋아요수">
 		            <c:choose>
-		              <c:when test="${t.LIKE_YN eq 'Y'}">
+		              <c:when test="${a.LIKE_YN eq 'Y'}">
 		                <img src="../image/icon/like_on.png" alt="꽉찬하트">
 		              </c:when>
 		              <c:otherwise>
 		                <img src="../image/icon/like.png" alt="빈하트">
 		              </c:otherwise>
 		            </c:choose>       
-		            <c:out value="${t.LIKE_CNT }"></c:out>
+		            <c:out value="${a.LIKE_CNT }"></c:out>
 		          </div>
 			    </div>
 			  </div>

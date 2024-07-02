@@ -204,6 +204,10 @@
   gap: 8px;
 }
 
+.list_item4  .item_content_box .item_title.fix_hieght{
+	height: 39px;
+}
+
 .study_box2 .list_item4  .item_content_box2 .item_info_wrap2{
   font-size : 22px;
   font-weight: 600;
@@ -926,6 +930,13 @@
   	font-size: 20px;
   	line-height: 24px;
   }
+  
+  .list_item4  .item_content_box .item_title{
+    font-size : 15px;
+  }
+  .list_item4  .item_content_box .item_title.fix_hieght{
+  	height: 34px;
+  }  
   
   
 }
