@@ -67,7 +67,7 @@ function notOpen(){
     </div>
     <div class="header_box2 ">
       <div>
-      	<a class="header_box_btn white_round_btn" href="https://open.kakao.com/o/spPYQ7yg">문의하기</a>
+      	<a class="header_box_btn white_round_btn mobile_hidden" href="https://open.kakao.com/o/spPYQ7yg">문의하기</a>
         <c:choose>
           <c:when test="${m eq null }">
             <a class="header_box_btn main_round_btn2" href="/main/login_form">로그인</a>

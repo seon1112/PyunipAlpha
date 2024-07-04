@@ -412,6 +412,9 @@ footer{
 
 
 @media screen and (max-width: 1180px){
+  .header_box2 > div{
+    gap : 6px;
+  }
   .org_btn, .gray_btn, .darkGray_btn{
     padding: 9px 16px;
   }	

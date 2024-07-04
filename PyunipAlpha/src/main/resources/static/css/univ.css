@@ -1,12 +1,22 @@
 @charset "UTF-8";
+/* .univ_info_wrap{ */
+/*   width: 100%; */
+/*   border: 1px solid var(--Gray-20); */
+/*   border-radius: 16px; */
+/*   padding: 36px 46px; */
+/*   display: flex; */
+/*   justify-content: flex-start; */
+/*   align-items: center; */
+/*   gap: 33px; */
+/* } */
 .univ_info_wrap{
   width: 100%;
   border: 1px solid var(--Gray-20);
   border-radius: 16px;
   padding: 36px 46px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  display : grid;
+  grid-template-columns : 110px 1fr;
+  align-items : center;
   gap: 33px;
 }
 
@@ -89,6 +99,7 @@
    font-size: 16px;
    font-weight: 400;   
    border-collapse: collapse;
+   word-break: break-all;
 }
 
 .info_table > tbody > tr:first-child >td{
@@ -109,6 +120,7 @@
 .info_table> tbody > tr >td:not(:first-child){
   color: var(--Gray-80);
   padding-bottom: 5px;
+  overflow-wrap:break-word;
 }
 
 .search_btn_wrap{
@@ -403,6 +415,7 @@ colgroup col.col1{
   }
 	
   .univ_info_wrap{
+    grid-template-columns : 70px 1fr;
     padding: 15px;
     gap : 15px;
   }
