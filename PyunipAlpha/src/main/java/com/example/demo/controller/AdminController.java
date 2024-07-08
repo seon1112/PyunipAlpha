@@ -48,7 +48,7 @@ public class AdminController {
 	@Value("${file.upload-dir}")
 	private String uploadPath;
 	@Autowired
-	private FilesUtils fileService;
+	private FilesUtils filesUtils;
 	@Autowired
 	private DateUtils dateService;	
 	@Autowired
@@ -61,6 +61,8 @@ public class AdminController {
 	private LogService logService;
     @Autowired
     private UnivCacheService univCacheService;
+	@Autowired
+	private LogService errorService;
     @Autowired
     private BoardService boardService;
 	
@@ -89,30 +91,29 @@ public class AdminController {
 							  Model model, HttpSession session) {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("BRD_CTG", BRD_CTG);
+		String url="forward:/WEB-INF/views/admin/board/apply_list.jsp";		
 
 		if (session.getAttribute("m") != null) {
 			if(!((UserDto) session.getAttribute("m")).getROLE().equals("ROLE_ADMIN")) {
 				model.addAttribute("error", "권한이 없습니다.");
-				return "forward:/WEB-INF/views/admin/board/apply_list.jsp";		
+				return url;
 			}else {
 				String USER_NUM = ((UserDto) session.getAttribute("m")).getUSER_NUM() + "";
 				map.put("USER_NUM", USER_NUM);
 			}
 		}else {
 			model.addAttribute("error", "로그인이 필요한 서비스입니다.");
-			return "forward:/WEB-INF/views/admin/board/apply_list.jsp";	
+			return url;
 		}
 		map.put("SCH", SCH);
 
 		try {
 			int nMaxVCnt = 10;
 			int nMaxRecordCnt = boardService.findBoardSize(map);
-			
 			map.put("nSelectPage", nSelect);
 			map.put("nMaxVCnt", nMaxVCnt);
 			
 			List<BoardDto> list = boardService.findBoardByCtg(map);
-
 			model.addAttribute("list", list);
 			model.addAttribute("size", nMaxRecordCnt);
 			model.addAttribute("nMaxVCnt", nMaxVCnt);
@@ -123,7 +124,7 @@ public class AdminController {
 			model.addAttribute("error", "에러가 발생했습니다. 관리자에게 문의해주세요.");
 		}
 
-		return "forward:/WEB-INF/views/admin/board/apply_list.jsp";		
+		return url;	
 	}
 
 	/**
@@ -178,7 +179,7 @@ public class AdminController {
 				if (files != null) {
 					List<FilesDto> files_list=new ArrayList<>();
 					for (MultipartFile multi : files) {
-						FilesDto files_dto = fileService.getAttachByMultipart(multi,"1");
+						FilesDto files_dto = filesUtils.getAttachByMultipart(multi,"1");
 						files_dto.setREG_USER_IP(IpUtils.getRemoteIp(req));
 						files_dto.setREG_USER_NUM(USER_NUM);
 						files_list.add(files_dto);
@@ -231,7 +232,80 @@ public class AdminController {
 			model.addAttribute("error", "에러가 발생했습니다. 관리자에게 문의해주세요.");
 		}
 	}	
-	
+	/**
+	 * 게시물 삭제 (0 편입이야기 / 1 편입스터디 / 2 모집요강 / 3 편입뉴스 / 4  합격 수기)
+	 * @param BRD_NUM 게시글_일련번호
+	 * @param BRD_CTG 카테고리
+	 * @throws Exception 
+	 */			
+	@DeleteMapping("/admin/board")
+	@ResponseBody
+	public String deleteBoard(@RequestParam String BRD_NUM, 
+							  @RequestParam String BRD_CTG, 
+							  HttpSession session, HttpServletRequest request) throws Exception {
+		String msg = "";
+		
+		if (session.getAttribute("m") != null) {
+			try {
+				HashMap<String, Object> map = new HashMap<>();
+				map.put("BRD_NUM", BRD_NUM);
+				map.put("BRD_CTG", BRD_CTG);
+
+				if (BRD_CTG.equals("1")) { 
+					String content=boardService.findStudyByNum(map).getCONTENT();
+					if(content != null) {
+						String filenames=SummerUtils.extractFilenames(content);
+						if(filenames != null) {
+							SummerUtils.deleteFilenames2(filenames);
+						}
+					}				
+					
+					boardService.deleteBoard(map);
+				}else if(BRD_CTG.equals("0") || BRD_CTG.equals("4")){
+					String content=boardService.findStudyByNum(map).getCONTENT();
+					
+					if(content != null) {
+						String filenames=SummerUtils.extractFilenames(content);
+						if(filenames != null) {
+							SummerUtils.deleteFilenames2(filenames);
+						}
+					}
+					
+					boardService.deleteBoard(map);
+				}else if(BRD_CTG.equals("2") || BRD_CTG.equals("3")){
+					//summernote 파일 삭제
+					String content=boardService.findStudyByNum(map).getCONTENT();
+					if(content != null) {
+						String filenames=SummerUtils.extractFilenames(content);
+						if(filenames != null) {
+							SummerUtils.deleteFilenames2(filenames);
+						}
+					}
+					
+					//올린 첨부파일 삭제
+					List<FilesDto> filesdto=filesService.findFilesByNum(map);
+					for(FilesDto dto : filesdto) {
+						int re = filesUtils.deleteAttachByBoard(dto.getFILE_NAME(),"1");
+						if(re == 1) {
+							msg="첨부파일 삭제에 실패했습니다. 관리자에게 문의해주세요";
+							return msg;
+						}
+					}
+					boardService.deleteBoard(map);
+				}else{
+					boardService.deleteBoard(map);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				String error=e.getMessage();
+				errorService.insertErrorLog(request,session,error);
+				msg = "에러가 발생했습니다. 관리자에게 문의해주세요";
+			}
+		} else {
+			msg = "로그인이 필요한 서비스입니다.";
+		}
+		return msg;
+	}	
 	//----------------------------대학정보---------------------------------------------
 	
 	/**
@@ -482,9 +556,9 @@ public class AdminController {
 		try {
 			if(file!=null) {
 				if( filename != null) {
-					fileService.deleteImage(filename); 
+					filesUtils.deleteImage(filename); 
 				}
-				String originalName = fileService.getAttachByMultipart2(file,"1");
+				String originalName = filesUtils.getAttachByMultipart2(file,"1");
 				univ.setLOGO(originalName);
 			}
 		} catch (Exception e) {
@@ -1948,7 +2022,7 @@ public class AdminController {
 			try {
 				if(file!=null) {
 					//기존에 있던 파일 삭제
-					int re=fileService.deleteAttachByBoard(filename, "2");
+					int re=filesUtils.deleteAttachByBoard(filename, "2");
 					if(re==1) {
 						msg="기존 파일 삭제시 에러가 발생했습니다. 관리자에게 문의해주세요.";
 						return msg;
@@ -1959,7 +2033,7 @@ public class AdminController {
 					map.put("BRD_NUM", BRD_NUM);
 					
 					//수정된 파일 삽입
-					FilesDto files_dto = fileService.getAttachByMultipart(file,"2");
+					FilesDto files_dto = filesUtils.getAttachByMultipart(file,"2");
 					files_dto.setREG_USER_IP(IpUtils.getRemoteIp(req));
 					files_dto.setREG_USER_NUM(USER_NUM);
 					

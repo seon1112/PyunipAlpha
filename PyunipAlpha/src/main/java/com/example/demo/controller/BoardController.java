@@ -1664,7 +1664,7 @@ public class BoardController {
 	public void DownloadFile2(@RequestParam int NUM, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String fileName="";
-		String path="/vosej2241/tomcat/webapps/ROOT/WEB-INF/classes/static/";
+		String path="/vosej2241/tomcat/webapps/ROOT/WEB-INF/classes/static/agreement";
 		if(NUM == 1) {
 			fileName="서비스이용약관.pdf";
 		}else {

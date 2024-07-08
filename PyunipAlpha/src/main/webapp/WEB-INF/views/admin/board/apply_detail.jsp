@@ -18,7 +18,7 @@ function deleteBoard(){
     return;
   }
   $.ajax({
-    url:'/user/board',
+    url:'/admin/board',
     type:'delete',
     data:{
       BRD_NUM:$("#BRD_NUM").val()  
