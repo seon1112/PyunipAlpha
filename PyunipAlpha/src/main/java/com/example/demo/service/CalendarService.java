@@ -34,8 +34,9 @@ public class CalendarService {
 	    	}
 	    	Map<String, Object> map=new HashMap<>();
 	    	map.put("no", dto.getUNIV_NUM());
-	    	String dtm=dateService.DateConversion(dto.getAPY_ST_DTM().replace("-", ""))+"~"+dateService.DateConversion(dto.getAPY_ED_DTM().replace("-", ""));
-	    	map.put("title", dto.getUNIV_NAME()+" 원서 접수 "+dtm);
+//	    	String dtm=dateService.DateConversion(dto.getAPY_ST_DTM().replace("-", ""))+"~"+dateService.DateConversion(dto.getAPY_ED_DTM().replace("-", ""));
+//	    	map.put("title", dto.getUNIV_NAME()+" 원서 접수 "+dtm);
+	    	map.put("title", dto.getUNIV_NAME()+" 원서 접수");
 	    	map.put("start", dto.getAPY_ST_DTM());
 	    	map.put("end", dto.getAPY_ED_DTM());
 	    	//map.put("textcolor", "#656565");
