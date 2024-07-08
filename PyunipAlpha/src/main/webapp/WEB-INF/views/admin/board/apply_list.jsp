@@ -20,6 +20,8 @@
    </thead>
    <tbody>
    <c:choose>
+   	<c:when  test="${error eq null }">
+    <c:choose>
     <c:when  test="${nMaxRecordCnt eq 0}">
       <tr>
         <td colspan="5">조회할 게시물이 없습니다.</td>
@@ -36,6 +38,13 @@
        </tr>
      </c:forEach>       
     </c:otherwise>
+    </c:choose>   	
+   	</c:when>
+   	<c:otherwise>
+      <tr>
+       <td colspan="5">${error }</td>
+      </tr>  	
+   	</c:otherwise>
    </c:choose>
    </tbody>
 </table>

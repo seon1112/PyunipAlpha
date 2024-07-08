@@ -91,7 +91,7 @@ public class AdminController {
 		map.put("BRD_CTG", BRD_CTG);
 
 		if (session.getAttribute("m") != null) {
-			if(((UserDto) session.getAttribute("m")).getROLE().equals("ROLE_ADMIN")) {
+			if(!((UserDto) session.getAttribute("m")).getROLE().equals("ROLE_ADMIN")) {
 				model.addAttribute("error", "권한이 없습니다.");
 				return "forward:/WEB-INF/views/admin/board/apply_list.jsp";		
 			}else {
