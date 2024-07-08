@@ -118,7 +118,7 @@ public class UserController {
 	public void myPageForm(HttpSession session,HttpServletRequest request,Model model) throws Exception {
 		String uri=request.getHeader("Referer");
 		if(uri == null) {
-			uri = "http://pyunipalpha.shop/main/main_form";
+			uri = "https://pyunipalpha.shop/main/main_form";
 		}
 		request.getSession().setAttribute("prevPage", uri);
 		
