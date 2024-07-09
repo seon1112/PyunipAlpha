@@ -27,7 +27,7 @@
 		        </c:when>
 		        <c:otherwise>
 		          <a class="content_item" href="javascript:goDetail('${a.BRD_NUM}')">
-		            <div class="number"><c:out value="${nMaxRecordCnt - vs.index - nSelectPage + 1}"></c:out></div>
+		            <div class="number"><c:out value="${nMaxRecordCnt - vs.index - (nSelectPage-1)*nMaxVCnt}"></c:out></div>
 		            <div class="title"><c:out value="${a.TITLE}"></c:out>
 		             <c:if test="${a.FILE_YN eq 'Y'}">
 		               <img src="../image/icon/file.png" alt="파일 아이콘">

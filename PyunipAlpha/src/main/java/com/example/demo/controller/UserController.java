@@ -91,7 +91,11 @@ public class UserController {
 			try {
 				String USER_NUM=((UserDto) session.getAttribute("m")).getUSER_NUM();
 				
-				//비밀번호 변경
+				if(USER_NM.length() < 4 || USER_NM.length() > 10) {
+					msg="아이디는 4~10자 문자만 가능합니다.";
+					return msg;
+				}
+				
 				UserDto dto=new UserDto();
 				dto.setUSER_NUM(USER_NUM);
 				dto.setUSER_NM(USER_NM);
@@ -118,7 +122,8 @@ public class UserController {
 	public void myPageForm(HttpSession session,HttpServletRequest request,Model model) throws Exception {
 		String uri=request.getHeader("Referer");
 		if(uri == null) {
-			uri = "https://pyunipalpha.shop/main/main_form";
+//			uri = "https://pyunipalpha.shop/main/main_form";
+			uri = "http://localhost:8080/main/main_form";
 		}
 		request.getSession().setAttribute("prevPage", uri);
 		

@@ -80,9 +80,7 @@ function goList(nSelect){
 		  <form id="talkForm" name="talkForm" onsubmit="return false;">
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 			<input type="hidden" name="filenames" id="filenames" value="${filenames }">
-		    <input type="hidden" name="BRD_CTG" value="0">
 		    <input type="hidden" id="BRD_NUM" name="BRD_NUM" value="${num}">		
-		    <input type="hidden" name="REG_USER_NUM" value="${t.REG_USER_NUM}">  
 		    <div class="content_wrap">
 		      <div class="insert_info_wrap">
 		        <div class="info_item">

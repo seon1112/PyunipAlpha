@@ -291,7 +291,8 @@ public class BoardController {
 			try {
 				//수정자와 작성자가 동일한지 확인
 				String USER_NUM = ((UserDto) session.getAttribute("m")).getUSER_NUM();
-				String REG_USER_NUM = b.getREG_USER_NUM();
+				String REG_USER_NUM = boardService.findRegUserNumByBrdNum(b.getBRD_NUM());
+				
 				if(!USER_NUM.equals(REG_USER_NUM)) {
 					return msg="게시물 수정에 실패했습니다. 정보를 다시 확인해주세요";
 				}
@@ -302,6 +303,7 @@ public class BoardController {
 				
 				b.setUPT_USER_NUM(USER_NUM);
 				b.setUPT_IP(IpUtils.getRemoteIp(req));
+				b.setBRD_CTG("0");
 
 				boardService.updateBoard(b);
 
@@ -550,9 +552,9 @@ public class BoardController {
 
 		if (session.getAttribute("m") != null) {
 			try {
-				//수정자와 작성자가 동일하지 확인
-				String REG_USER_NUM=b.getREG_USER_NUM();
+				//수정자와 작성자가 동일한지 확인
 				String USER_NUM = ((UserDto) session.getAttribute("m")).getUSER_NUM();
+				String REG_USER_NUM = boardService.findRegUserNumByBrdNum(b.getBRD_NUM());
 				
 				if(!REG_USER_NUM.equals(USER_NUM)) {
 					return msg="게시물 수정에 실패했습니다. 정보를 다시 확인해주세요";
@@ -562,7 +564,7 @@ public class BoardController {
 				String content=b.getCONTENT();
 				SummerUtils.deleteFilenames(content, filenames);				
 				
-				
+				b.setBRD_CTG("1");
 				b.setUPT_USER_NUM(USER_NUM);
 				b.setUPT_IP(IpUtils.getRemoteIp(req));
 
@@ -570,6 +572,7 @@ public class BoardController {
 				b.setAPPLY_ED_DTM(b.getAPPLY_ED_DTM().replace("-", ""));
 				b.setED_DTM(b.getED_DTM().replace("-", ""));
 				b.setST_DTM(b.getST_DTM().replace("-", ""));
+				
 
 				boardService.updateBoardStudy(b);
 
@@ -749,7 +752,6 @@ public class BoardController {
 					try {
 						errorService.insertErrorLog(req,session,error);
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					response.put("success", false);
@@ -797,8 +799,17 @@ public class BoardController {
 			
 			Map<String, Object> response = new HashMap<>();
 			if (session.getAttribute("m") != null) {
-				String REG_USER_NUM = s.getREG_USER_NUM();
+				//수정자와 작성자가 동일한지 확인
 				String USER_NUM = ((UserDto) session.getAttribute("m")).getUSER_NUM();
+				String REG_USER_NUM="";
+				try {
+					REG_USER_NUM = boardService.findRegUserNumByBrdNum(s.getBRD_NUM());
+				} catch (Exception e) {
+					response.put("success", false);
+					response.put("message", "게시물 수정에 실패했습니다. 관리자에게 문의해주세요");
+					return response;
+				}
+				
 				
 				if(!REG_USER_NUM.equals(USER_NUM)) {
 					response.put("success", false);
@@ -809,6 +820,7 @@ public class BoardController {
 				String BRD_NUM = s.getBRD_NUM();
 				s.setUPT_USER_NUM(USER_NUM);
 				s.setUPT_IP(IpUtils.getRemoteIp(req));
+				s.setBRD_CTG("5");
 				
 				try {
 					if(file!=null) {
@@ -969,8 +981,9 @@ public class BoardController {
 		
 		if (session.getAttribute("m") != null) {
 			try {
-				String REG_USER_NUM = b.getREG_USER_NUM();
+				//수정자와 작성자가 동일한지 확인
 				String USER_NUM = ((UserDto) session.getAttribute("m")).getUSER_NUM();
+				String REG_USER_NUM = boardService.findRegUserNumByBrdNum(b.getBRD_NUM());
 				
 				if(!REG_USER_NUM.equals(USER_NUM)) {
 					return msg="게시물 수정에 실패했습니다. 정보를 다시 확인해주세요";
@@ -980,6 +993,7 @@ public class BoardController {
 				String content=b.getCONTENT();
 				SummerUtils.deleteFilenames(content, filenames);				
 				
+				b.setBRD_CTG("4");
 				b.setUPT_USER_NUM(USER_NUM);
 				b.setUPT_IP(IpUtils.getRemoteIp(req));
 				
@@ -1664,7 +1678,7 @@ public class BoardController {
 	public void DownloadFile2(@RequestParam int NUM, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String fileName="";
-		String path="/vosej2241/tomcat/webapps/ROOT/WEB-INF/classes/static/agreement";
+		String path="/vosej2241/tomcat/webapps/ROOT/WEB-INF/classes/static/agreement/";
 		if(NUM == 1) {
 			fileName="서비스이용약관.pdf";
 		}else {

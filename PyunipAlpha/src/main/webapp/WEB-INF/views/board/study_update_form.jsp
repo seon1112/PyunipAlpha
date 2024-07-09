@@ -113,10 +113,8 @@ function insertBoard(nSelect){
 	  <form id="studyForm" name="studyForm" onsubmit="return false;" >
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	    <input type="hidden" name="filenames" id="filenames" value="${filenames }">
-	    <input type="hidden" name="BRD_CTG" value="1">
 	    <input type="hidden" id="BRD_NUM" name="BRD_NUM" value="${s.BRD_NUM}">
 	    <input type="hidden" id="USER_NUM" value="${USER_NUM}">	  
-	    <input type="hidden" name="REG_USER_NUM" value="${s.REG_USER_NUM }">
 	    <div class="content_wrap">
 	      <div class="insert_info_wrap">
 	        <div class="info_item">

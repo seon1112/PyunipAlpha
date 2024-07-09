@@ -140,7 +140,6 @@ $(document).on("click",".optionItem",function(){
       <button type="button" class="org_large_btn" id="insert_t_btn">저장</button>
       <a class="gray_large_btn" href="javascript:goList()" >취소</a>
     </div>
-    <input type="hidden" name="BRD_CTG" value="0">
     </form>
 </div>
 <input type="hidden" id="USER_NUM" value="${USER_NUM}">

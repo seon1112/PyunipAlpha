@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,6 +72,15 @@ public class UserService {
 		if(user.getUSER_NUM()!=null) {
 			user.setUSER_NUM(EncryptionUtil.decrypt(String.valueOf(user.getUSER_NUM()), encryptionKey));
 		}
+		
+		String user_nm=user.getUSER_NM();
+		user_nm=removeScriptTags(user_nm);
+		if(user_nm.equals("")) {
+			String random=UUID.randomUUID().toString();
+			user.setUSER_NM("편입알파"+random.substring(0, 5));
+		}
+		user.setUSER_NM(user_nm);
+		
 		return usersRpt.updateUsers(user);
 	}
 	
@@ -110,6 +122,29 @@ public class UserService {
 		}
 		return user;
 	}
+	
+    public static String removeScriptTags(String content) {
+        if (content != null) {
+            // 정규 표현식을 사용하여 <script> 태그와 </script> 태그를 각각 제거
+            String scriptOpenPattern = "(?i)<script[^>]*>"; // <script> 태그
+            String scriptClosePattern = "(?i)</script>"; // </script> 태그
+            
+            // 패턴을 컴파일
+            Pattern openPattern = Pattern.compile(scriptOpenPattern, Pattern.DOTALL);
+            Pattern closePattern = Pattern.compile(scriptClosePattern, Pattern.DOTALL);
+            
+            // 각각의 패턴을 매칭하여 제거
+            Matcher openMatcher = openPattern.matcher(content);
+            content = openMatcher.replaceAll("");
+            
+            Matcher closeMatcher = closePattern.matcher(content);
+            content = closeMatcher.replaceAll("");
+            
+            return content;
+        } else {
+            return "";
+        }
+    }
 	
 	/****************************자체 로그인 구현시 필요했던 코드***************************************************/	
 	public Integer checkPwd(HashMap<String, Object> map) {

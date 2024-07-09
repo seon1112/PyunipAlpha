@@ -111,8 +111,6 @@ function goList(nSelect){
   <input type="hidden" id="BRD_NUM" name="BRD_NUM" value="${s.BRD_NUM}">
   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
   <input type="hidden" id="USER_NUM" value="${USER_NUM}">
-  <input type="hidden" name="REG_USER_NUM" value="${s.REG_USER_NUM }">
-  <input type="hidden" name="BRD_CTG" value="5">
     <div class="content_wrap">
       <div class="insert_content_wrap">
         <label class="hidden_label" for="title">제목을 입력해주세요</label>

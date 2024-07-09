@@ -31,12 +31,12 @@ public class FilesService {
     		String ENCRY_BRD_NUM=EncryptionUtil.decrypt(BRD_NUM, encryptionKey);
     		map.put("BRD_NUM", ENCRY_BRD_NUM);
     	}
-    	map.put("BRD_NUM", BRD_NUM);
     	
     	List<FilesDto> list=filesRpt.findFilesByNum(map);
     	for(FilesDto dto : list) {
     		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
     	}
+    	map.put("BRD_NUM", BRD_NUM);
 		return list;
 	}
 	

@@ -87,7 +87,7 @@ function goList(nSelect){
 	             <div class="badge2">질문하기</div>
 	          </c:otherwise>
 	        </c:choose>
-	        <div class="talk_writer">${t.USER_NM }</div>
+	        <div class="talk_writer"><c:out value="${t.USER_NM}"></c:out></div>
 	        <div class="header_btn">
 	          <c:if test="${t.REG_USER_NUM eq USER_NUM }">
 	            <a class="org_btn" href="javascript:updateTalk('${nSelect}')">수정</a>

@@ -262,22 +262,22 @@ $(document).on("click",".optionItem",function(){
                <div class="badge2">질문하기</div>
             </c:otherwise>
           </c:choose>
-          <div class="item_title" aria-label="제목">${t.TITLE}</div>
+          <div class="item_title" aria-label="제목"><c:out value="${t.TITLE}"></c:out></div>
           <div class="item_content">${t.CONTENT }</div>
           <div class="item_footer">
             <div class="item_info_wrap">
               <div class="item_info"> 
                 <img src="../image/icon/view.png">
                 <span class="hidden_label">조회수</span>
-                ${t.VIEW_CNT }
+                <c:out value="${t.VIEW_CNT }"></c:out>
               </div>
               <div class="item_info">
                 <img src="../image/icon/like_on.png">
                 <span class="hidden_label">좋아요 수</span>
-                ${t.LIKE_CNT }
+                <c:out value="${t.LIKE_CNT }"></c:out>
               </div>
             </div>
-            <div aria-label="작성일" class="reg_dtm_box">${t.REG_DTM}</div>
+            <div aria-label="작성일" class="reg_dtm_box"><c:out value="${t.REG_DTM}"></c:out></div>
           </div>
         </a>
         </c:forEach> 
@@ -295,29 +295,29 @@ $(document).on("click",".optionItem",function(){
       <c:forEach var="s" items="${studyList}">
         <a class="list_item2" href="javascript:pageMove('${s.BRD_NUM}','1')">
           <div class="title_wrap">
-            <div class="item_date" style="display:flex; gap:4px;"><p>마감일</p><strong>${s.APPLY_ED_DTM}</strong></div>
+            <div class="item_date" style="display:flex; gap:4px;"><p>마감일</p><strong><c:out value="${s.APPLY_ED_DTM}"></c:out></strong></div>
             <c:if test="${s.ED_YN eq 'Y'}">
               <div class="siren_box">마감 임박</div>          
             </c:if>
           </div>
-          <div class="item_title">${s.TITLE}</div>
+          <div class="item_title"><c:out value="${s.TITLE}"></c:out></div>
           <div class="item_content">
-            <div style="margin-bottom: 5px;" class="item"><p>진행방법 :</p>${s.PCD_WAY }</div>
-            <div class="item"><p>시작예정일 :</p>${s.ST_DTM }</div>
+            <div style="margin-bottom: 5px;" class="item"><p>진행방법 :</p><c:out value="${s.PCD_WAY }"></c:out></div>
+            <div class="item"><p>시작예정일 :</p><c:out value="${s.ST_DTM }"></c:out></div>
           </div>
           <div class="item_footer">
             <div class="item_info_wrap">
               <div class="item_info">
                 <span class="hidden_label">조회수</span>
                 <img src="../image/icon/view.png" alt="">
-                ${s.VIEW_CNT}
+                <c:out value="${s.VIEW_CNT}"></c:out>
               </div>
               <div class="item_info">
                 <span class="hidden_label">좋아요수</span>
-                <img src="../image/icon/like_on.png" alt="">${s.LIKE_CNT}
+                <img src="../image/icon/like_on.png" alt=""><c:out value="${s.LIKE_CNT}"></c:out>
               </div>
             </div>
-            <div aria-label="작성자" class="reg_dtm_box">${s.USER_NM}</div>
+            <div aria-label="작성자" class="reg_dtm_box"><c:out value="${s.USER_NM}"></c:out></div>
           </div>
         </a>
      </c:forEach> 
@@ -340,7 +340,7 @@ $(document).on("click",".optionItem",function(){
       		<label class="label">대학리스트</label>
       		<ul class="optionList">
 	          <c:forEach var="u" items="${univList }">
-      		  <li class="optionItem" data-value="${u.UNIV_NUM }">${u.UNIV_NAME }</li>
+      		  <li class="optionItem" data-value="${u.UNIV_NUM }"><c:out value="${u.UNIV_NAME }"></c:out></li>
 	          </c:forEach>      		
       		</ul>
       	</div>      

@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +44,11 @@ public class BoardService {
     	List<BoardDto> list=boardRpt.findBoardByView(BRD_CTG);
     	for(BoardDto dto:list) {
     		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
+    		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+    			String content=dto.getCONTENT();
+    			content=removeScriptTags(content);
+    			dto.setCONTENT(content);
+    		}
     	}
         return list;
     }
@@ -50,6 +57,11 @@ public class BoardService {
     	List<BoardStudyDto> list=boardRpt.findBoardStudyByView(BRD_CTG);
     	for(BoardStudyDto dto:list) {
     		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
+    		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+    			String content=dto.getCONTENT();
+    			content=removeScriptTags(content);
+    			dto.setCONTENT(content);
+    		}
     	}
         return list;
 	}
@@ -65,6 +77,11 @@ public class BoardService {
     	for(BoardDto dto:list) {
     		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
     		dto.setREG_USER_NUM(EncryptionUtil.encrypt(dto.getREG_USER_NUM(), encryptionKey));
+    		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+    			String content=dto.getCONTENT();
+    			content=removeScriptTags(content);
+    			dto.setCONTENT(content);
+    		}
     	}
     	
     	map.put("USER_NUM", USER_NUM);
@@ -89,6 +106,12 @@ public class BoardService {
 		dto.setREG_USER_NUM(EncryptionUtil.encrypt(dto.getREG_USER_NUM(), encryptionKey));
 		map.put("USER_NUM", USER_NUM);
 		map.put("BRD_NUM", BRD_NUM);
+		
+		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+			String content=dto.getCONTENT();
+			content=removeScriptTags(content);
+			dto.setCONTENT(content);
+		}
 		
 		return dto;
 	}
@@ -214,6 +237,10 @@ public class BoardService {
     		dto.setREG_USER_NUM(USER_NUM);
     	}
 		
+    	String content=dto.getCONTENT();
+    	content=removeScriptTags(content);
+    	dto.setCONTENT(content);
+    	
 		return boardRpt.insertBoard(dto);
 	}
 	
@@ -246,6 +273,13 @@ public class BoardService {
     		UPT_USER_NUM=EncryptionUtil.decrypt(UPT_USER_NUM, encryptionKey);
     		dto.setUPT_USER_NUM(UPT_USER_NUM);
     	}
+    	
+		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+			String content=dto.getCONTENT();
+			content=removeScriptTags(content);
+			dto.setCONTENT(content);
+		}
+		
 		//데이터 잠금
 		boardRpt.selectBoardForUpdate(dto.getBRD_NUM());
 		// 데이터 업데이트
@@ -263,6 +297,11 @@ public class BoardService {
     	for(BoardDto dto:list) {
     		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
     		dto.setREG_USER_NUM(EncryptionUtil.encrypt(dto.getREG_USER_NUM(), encryptionKey));
+    		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+    			String content=dto.getCONTENT();
+    			content=removeScriptTags(content);
+    			dto.setCONTENT(content);
+    		}
     	}
     	
     	map.put("USER_NUM", USER_NUM);
@@ -280,6 +319,9 @@ public class BoardService {
     		dto.setREG_USER_NUM(USER_NUM);
     	}
 		
+    	String content=dto.getCONTENT();
+    	content=removeScriptTags(content);
+    	dto.setCONTENT(content);
 		int re=boardRpt.insertBoard(dto);
 		
 		if(re==1) {
@@ -303,9 +345,14 @@ public class BoardService {
 		BoardDto dto=boardRpt.findStudyByNum(map);
 		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
 		dto.setREG_USER_NUM(EncryptionUtil.encrypt(dto.getREG_USER_NUM(), encryptionKey));
+		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+			String content=dto.getCONTENT();
+			content=removeScriptTags(content);
+			dto.setCONTENT(content);
+		}
+		
 		map.put("USER_NUM", USER_NUM);
 		map.put("BRD_NUM", BRD_NUM);
-		
 		return dto;
 	}
 	
@@ -329,6 +376,12 @@ public class BoardService {
     		dto.setUPT_USER_NUM(UPT_USER_NUM);
     	}
     	
+		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+			String content=dto.getCONTENT();
+			content=removeScriptTags(content);
+			dto.setCONTENT(content);
+		}
+		
 		//board수정
 		boardRpt.selectBoardForUpdate(dto.getBRD_NUM());
 		boardRpt.updateBoard(dto);
@@ -349,6 +402,11 @@ public class BoardService {
     	for(BoardDto dto:list) {
     		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
     		dto.setREG_USER_NUM(EncryptionUtil.encrypt(dto.getREG_USER_NUM(), encryptionKey));
+    		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+    			String content=dto.getCONTENT();
+    			content=removeScriptTags(content);
+    			dto.setCONTENT(content);
+    		}
     	}
     	
     	map.put("USER_NUM", USER_NUM);
@@ -371,6 +429,12 @@ public class BoardService {
 		BoardDto dto=boardRpt.findSuccessByNum(map);
 		dto.setBRD_NUM(EncryptionUtil.encrypt(dto.getBRD_NUM(), encryptionKey));
 		dto.setREG_USER_NUM(EncryptionUtil.encrypt(dto.getREG_USER_NUM(), encryptionKey));
+		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+			String content=dto.getCONTENT();
+			content=removeScriptTags(content);
+			dto.setCONTENT(content);
+		}
+		
 		return dto;
 	}
 	
@@ -384,6 +448,10 @@ public class BoardService {
     		USER_NUM=EncryptionUtil.decrypt(USER_NUM, encryptionKey);
     		dto.setREG_USER_NUM(USER_NUM);
     	}
+    	
+    	String content=dto.getCONTENT();
+    	content=removeScriptTags(content);
+    	dto.setCONTENT(content);
 		
 		int re=boardRpt.insertBoard(dto);
 		
@@ -411,6 +479,12 @@ public class BoardService {
     		UPT_USER_NUM=EncryptionUtil.decrypt(UPT_USER_NUM, encryptionKey);
     		dto.setUPT_USER_NUM(UPT_USER_NUM);
     	}
+    	
+		if(dto.getCONTENT()!=null && !dto.getCONTENT().equals("")) {
+			String content=dto.getCONTENT();
+			content=removeScriptTags(content);
+			dto.setCONTENT(content);
+		}
     	
 		//board수정
 		boardRpt.selectBoardForUpdate(dto.getBRD_NUM());
@@ -487,6 +561,10 @@ public class BoardService {
     		board_dto.setREG_USER_NUM(USER_NUM);
     	}
     	
+    	String content=board_dto.getCONTENT();
+    	content=removeScriptTags(content);
+    	board_dto.setCONTENT(content);
+    	
 		//게시물 추가
 		int re=boardRpt.insertBoard(board_dto);
 		//파일 추가
@@ -520,6 +598,12 @@ public class BoardService {
     		board_dto.setUPT_USER_NUM(UPT_USER_NUM);
     	}
     	
+		if(board_dto.getCONTENT()!=null || board_dto.getCONTENT().equals("")) {
+			String content=board_dto.getCONTENT();
+			content=removeScriptTags(content);
+			board_dto.setCONTENT(content);
+		}
+    	
 		//게시물 수정
 		boardRpt.updateBoard(board_dto);
 		//기존 파일 삭제
@@ -538,6 +622,10 @@ public class BoardService {
     		USER_NUM=EncryptionUtil.decrypt(USER_NUM, encryptionKey);
     		board_dto.setREG_USER_NUM(USER_NUM);
     	}
+    	
+    	String content=board_dto.getCONTENT();
+    	content=removeScriptTags(content);
+    	board_dto.setCONTENT(content);
 		
 		//게시물 추가
 		int re=boardRpt.insertBoard(board_dto);
@@ -550,4 +638,27 @@ public class BoardService {
 			}
 		}		
 	}
+	
+    public static String removeScriptTags(String content) {
+        if (content != null) {
+            // 정규 표현식을 사용하여 <script> 태그와 </script> 태그를 각각 제거
+            String scriptOpenPattern = "(?i)<script[^>]*>"; // <script> 태그
+            String scriptClosePattern = "(?i)</script>"; // </script> 태그
+            
+            // 패턴을 컴파일
+            Pattern openPattern = Pattern.compile(scriptOpenPattern, Pattern.DOTALL);
+            Pattern closePattern = Pattern.compile(scriptClosePattern, Pattern.DOTALL);
+            
+            // 각각의 패턴을 매칭하여 제거
+            Matcher openMatcher = openPattern.matcher(content);
+            content = openMatcher.replaceAll("");
+            
+            Matcher closeMatcher = closePattern.matcher(content);
+            content = closeMatcher.replaceAll("");
+            
+            return content;
+        } else {
+            return "";
+        }
+    }
 }

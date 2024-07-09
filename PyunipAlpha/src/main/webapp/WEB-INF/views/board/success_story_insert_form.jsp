@@ -85,7 +85,6 @@ function insertBoard(){
   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
   <input type="hidden" name="filenames" id="filenames">
   <input type="hidden" id="USER_NUM" value="${USER_NUM}">
-  <input type="hidden" name="BRD_CTG" value="4">
     <div class="content_wrap">
       <div class="insert_info_wrap">
         <div class="info_item">
